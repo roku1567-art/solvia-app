@@ -93,3 +93,41 @@ body[data-page=map] header>*{display:none!important}
 /* 県のカードの下に出ていた「点検予定 n件」「太陽光 n…」は、カードの下の段（⚠・本日・今月）の位置に重ねて出す（下の県と重ならない） */
 .map-final .region-card{position:absolute}
 .map-final .region-card .region-layer-info:not([hidden]){position:absolute!important;left:3px;right:3px;bottom:3px;height:44px;display:flex!important;align-items:center;justify-content:center;margin:0!important;padding:0 6px!important;border-radius:4px;background:#0d3236f2!important;color:#e7f4ee!important;font-size:.78rem!important;font-weight:700;text-align:center;z-index:2}
+/* 地図の県の画面（ゲーム風） */
+body[data-page=map] .map-detail{display:flex;flex-direction:column;gap:6px;padding:6px 6px 10px;background:#081428;color:#fff}
+.map-detail .md-head .gt{display:flex;align-items:center}.map-detail .md-head .gt small{margin-left:auto}
+.md-sum{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;margin:6px 0 2px;padding:0!important;border:0!important;background:none!important;color:#fff}
+.md-sum span{display:flex;align-items:baseline;gap:4px}.md-sum b{font-size:1.3rem;color:#ffd75e}.md-sum b.warn{color:#ff9b8a}.md-sum small{font-size:.66rem;color:#b9c6e8}
+.md-sum em{flex-basis:100%;font-style:normal;font-size:.62rem;color:#b9c6e8}
+.map-detail .md-head .weather-chip{margin-top:4px;width:100%;border:2px solid #fff;border-radius:4px;background:#061238;color:#fff}
+.md-bar{display:flex;flex-wrap:wrap;gap:6px}.md-bar .map-toolbar,.md-bar .layer-switch{margin:0!important;display:flex;gap:4px}
+.md-bar button{min-height:38px;padding:0 12px;border:2px solid #fff!important;border-radius:4px;background:#0b1f5a!important;color:#fff!important;font-size:.82rem}
+.md-bar button[aria-pressed=true]{background:#ffd75e!important;color:#2a1a00!important;border-color:#ffd75e!important;font-weight:800}
+.md-opts summary{cursor:pointer;min-height:36px;display:flex;align-items:center;gap:8px;font-size:.84rem}.md-opts summary small{color:#ffd75e;font-size:.68rem}
+.md-opts .map-filter{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.md-opts .map-filter>*{min-height:38px;border:2px solid #fff;border-radius:4px;background:#061238;color:#fff}
+.map-detail .region-pin-map,.map-detail .real-map-wrap{border:3px solid #fff;border-radius:6px;box-shadow:inset 0 0 0 2px #000,0 0 0 2px #000;overflow:hidden}
+.map-detail .map-hint{margin:0;font-size:.62rem;color:#b9c6e8}
+.map-detail .map-site-list{display:flex;flex-direction:column;gap:2px;padding:4px 6px}
+.md-row{display:flex!important;align-items:center;gap:6px;border-bottom:1px dashed #33507e}.md-row:last-child{border:0}
+.md-row .site-card{flex:1;min-width:0;margin:0!important;background:none!important;border:0!important;color:#fff!important;box-shadow:none!important}
+.md-row .site-card strong{color:#fff}.md-row .site-card small{color:#b9c6e8}
+.md-ord{display:flex;flex-direction:column;gap:2px}.md-ord button{min-width:34px;min-height:30px;padding:0;border:2px solid #fff;border-radius:4px;background:none;color:#fff;font-size:.7rem}
+.map-detail .pagination button{border:2px solid #fff;background:#0b1f5a;color:#fff}
+.map-detail .md-sum{flex-direction:row!important;display:flex!important}.map-detail .md-sum>span{display:flex!important;flex-direction:row!important}
+/* 地域画面：ボタンを「見え方」「色分け」の2段に。並べ替えは押したときだけ。印の意味 */
+.md-bar{flex-direction:column;gap:4px}.md-bar .map-toolbar{align-items:center;flex-wrap:nowrap}.md-bar .map-switch{display:flex;gap:4px}
+.md-lbl{flex:none;width:3.6em;font-size:.66rem;color:#b9c6e8;letter-spacing:0}
+.md-sortbar{display:flex;justify-content:flex-end;margin:2px 0}.md-sortbar button{min-height:36px;padding:0 12px;border:2px solid #fff;border-radius:4px;background:#0b1f5a;color:#fff;font-size:.78rem}.md-sortbar button[aria-pressed=true]{border-color:#ffd75e;color:#ffd75e;font-weight:800}
+.number-pin .pin-mark{font-size:.8rem;color:#fff;font-weight:800}.number-pin .pin-mark.is-warn{color:#ff9b8a}
+.real-number-pin button{position:relative}.real-number-pin .pin-mark{position:absolute;left:30px;top:-8px;min-width:18px;padding:0 3px;border-radius:9px;background:#0b1f5a;color:#fff;font-size:.62rem;line-height:16px;white-space:nowrap;border:1px solid #fff}.real-number-pin .pin-mark.is-warn{background:#c8352a}.real-number-pin .pin-mark svg{width:12px;height:12px}
+.md-bar .map-toolbar{justify-content:flex-start!important;width:100%;gap:4px}.md-bar .map-switch{flex:1;display:grid!important;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;padding:0!important;background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important}.md-bar .map-switch button{width:100%;border-radius:4px!important}.md-bar [data-map-ledger]{flex:none;width:calc((100% - 3.6em - 8px)/3)}
+/* 今日だけ・位置未登録・印の見かた・現場に着いたら */
+.md-sortbar{flex-wrap:wrap;gap:6px}.md-sortbar .md-noloc{border-color:#ffd75e;color:#ffd75e}
+.map-detail details.map-hint summary{cursor:pointer;min-height:32px;display:flex;align-items:center;font-size:.7rem;color:#b9c6e8}
+.si-arrive .si-edit{width:100%;margin-top:6px;min-height:38px}
+.si-arrive .si-stats dd{text-align:left;white-space:pre-wrap}.si-arrive .si-stats div{flex-direction:column;align-items:stretch;gap:2px}
+#dialog.gm-dlg #solvia-arrival label{display:grid;gap:4px;margin:8px 0;color:#dfe9f3;font-size:.84rem}
+#dialog.gm-dlg #solvia-arrival textarea{border:2px solid #fff;border-radius:4px;background:#061238;color:#fff;font:inherit;padding:6px}
+#dialog.gm-dlg #solvia-arrival .form-footer{background:#081428;border-top:3px solid #fff}#dialog.gm-dlg #solvia-arrival .primary{background:none;border:2px solid #ffd75e;color:#ffd75e;font-weight:800}
+.map-final .landmark-map-foot .map-noloc{color:#ffd75e!important}
+#dialog.gm-dlg .si-arrive .td-btn{background:none!important;color:#fff!important}

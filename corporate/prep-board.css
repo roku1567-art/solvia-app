@@ -89,3 +89,8 @@ body.gm-page #page .small-note{color:#b9c6e8}
 .gm-mode select{min-height:32px;padding:0 6px;border:2px solid #ffd75e;border-radius:4px;background:#061238;color:#ffd75e;font:inherit;font-size:.78rem;font-weight:700}
 .gm-pagehead .gt .gm-mode+.gclose{margin-left:8px}
 .calendar-head .gclose{margin-left:auto;align-self:center}
+/* 地図の拠点の小窓（ゲーム風） */
+.si-head{display:flex;gap:10px;align-items:center}.si-head .td-tok{flex:none}
+.si-stats{grid-template-columns:1fr}.si-stats dd{text-align:right;margin:0}.si-stats dd small{display:block;font-size:.6rem;color:#b9c6e8}
+.si-sum{flex-wrap:wrap;gap:4px 6px;margin-bottom:4px}.si-v{color:#ffd75e}
+.si-cmds{display:grid;grid-template-columns:1fr 1fr;gap:6px}.si-cmds .si-wide{grid-column:1/-1}#dialog.gm-dlg .si-cmds .td-btn{background:none!important;color:#fff!important}#dialog.gm-dlg .si-cmds .td-main{color:#ffd75e!important}
