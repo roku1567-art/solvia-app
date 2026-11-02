@@ -274,3 +274,194 @@ button.bp-slot:focus-visible{outline:2px solid var(--bp-cyan);outline-offset:1px
 .eb{padding:0 6px;font-size:.62rem;font-weight:700}
 .eb-late{background:#4a1416;box-shadow:inset 0 0 0 1px #ff6b6b;color:#ffb3b3}
 .bp-door .bp-attn{width:clamp(8px,34cqh,12px);height:clamp(8px,34cqh,12px)}
+/* 盤は見る用（小さく上に）・選ぶ欄・窓①②（盤に重ねず下に。窓だけ動かして読む） */
+.board-screen .bp-cabinet{flex:0 0 auto!important;height:max(212px,36%)}
+.bp-pick{flex:none;display:grid;grid-template-columns:48px minmax(0,1fr) 48px 82px;gap:5px}
+.bp-pick>button{min-height:48px;border:2px solid #fff;border-radius:5px;background:#0b1f5a;color:#fff;font-size:1rem;font-weight:800}
+.bp-pick>button:disabled{opacity:.35}
+.bp-pick .bp-pick-no{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#061238;line-height:1.1;min-width:0}
+.bp-pick .bp-pick-no b{font:800 1.25rem ui-monospace,monospace;color:#ffd75e}.bp-pick .bp-pick-no small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.7rem;font-weight:600}
+.bp-pick .bp-pick-all{font-size:.88rem}
+.bp-wins{flex:1 1 0;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:6px;-webkit-overflow-scrolling:touch}
+.bp-wins .bp-bubble{position:static!important;max-height:none!important;width:auto!important;flex:none;border:3px solid #fff!important;border-radius:6px;background:#0b1f5a!important;box-shadow:0 0 0 2px #000!important}
+.bp-wins .bp-bubble::before,.bp-wins .bp-bubble::after{display:none!important}
+.bp-wins .bp-brief{flex:none;border:3px solid #fff!important;background:#0b1f5a!important;box-shadow:0 0 0 2px #000}
+/* ≡ 選ぶ・番号入力の窓 */
+.bp-pk-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+.bp-pk{min-height:44px;display:flex;align-items:center;justify-content:center;border-radius:4px;font:800 1rem ui-monospace,monospace;background:linear-gradient(#e8c477,#a8812f);color:#0b3a6a;border:1px solid #3a2508}
+.bp-pk.c-complete{color:#0a6b3a}.bp-pk.has-attn{box-shadow:inset 0 0 0 3px #e2483a}.bp-pk.is-sel{outline:3px solid #fff;outline-offset:1px}
+.bp-pk.is-empty{background:#1d1408;color:#6b5a40}
+.bp-pk-pages{display:flex;gap:5px;margin-top:6px}.bp-pk-pages button{flex:1;min-height:38px;border:2px solid #fff;border-radius:4px;background:none;color:#fff}.bp-pk-pages button[aria-pressed=true]{background:#ffd75e;color:#2a1a00}
+.bp-kp-disp{display:flex;flex-direction:column;align-items:center;border:2px solid #ffd75e;border-radius:4px;background:#061238;padding:6px}
+.bp-kp-disp b{font:800 2rem ui-monospace,monospace;color:#ffd75e;letter-spacing:.1em}.bp-kp-disp small{font-size:.8rem}
+.bp-kp-keys{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.bp-kp-keys button{min-height:54px;border:2px solid #fff;border-radius:4px;background:#0b1f5a;color:#fff;font:800 1.3rem ui-monospace,monospace}
+.bp-kp-keys [data-kp-del]{font:700 1rem sans-serif}.bp-kp-keys .bp-kp-ok{border-color:#ffd75e;color:#ffd75e;font:800 1rem sans-serif}.bp-kp-keys .bp-kp-ok:disabled{opacity:.4}
+/* 縦が短い画面：盤は見る用なのでさらに小さく、凡例は隠して、窓①②に場所を回す（盤の欄の実際の高さで判断） */
+.board-screen{container-type:size;container-name:board}
+@container board (max-height:520px){.board-screen .bp-cabinet{height:162px!important}.board-screen .bp-legend{display:none!important}.bp-pick>button{min-height:44px}}
+/* 選択中の拠点の窓（1つ・ゲーム風） */
+.bp-wins .bp-win{flex:none;display:flex;flex-direction:column;gap:6px;padding:8px 10px!important;border:3px solid #fff!important;border-radius:6px;background:#0b1f5a!important;box-shadow:0 0 0 2px #000!important;color:#fff;font-family:"Hiragino Maru Gothic ProN","Rounded Mplus 1c","Yu Gothic",sans-serif}
+.bp-win-head{display:flex;align-items:center;gap:8px;min-width:0}
+.bp-win-tok{flex:none;padding:3px 6px;border-radius:3px;background:linear-gradient(#e8c477,#a8812f);color:#0b3a6a;font:800 .95rem ui-monospace,monospace}
+.bp-win-name{flex:1;min-width:0;font-size:1.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bp-win-tools{flex:none;display:flex;gap:4px}.bp-win-tools button{min-height:32px;min-width:36px;padding:0 6px;border:1px solid #8fa6cc!important;border-radius:4px;background:none!important;color:#dfe9f3!important;font-size:.7rem}
+.bp-win-tools .bp-star-btn{display:flex;align-items:center;justify-content:center}
+.bp-win-stats{display:flex;align-items:baseline;gap:4px 14px;flex-wrap:wrap;padding:2px 0 4px;border-bottom:1px dashed #33507e}
+.bp-win-stats>span{display:inline-block;white-space:nowrap}.bp-win-stats small{font-size:.68rem;color:#b9c6e8}
+.bp-win-stats b{font-size:1.5rem;color:#ffd75e;font-variant-numeric:tabular-nums}.bp-win-stats b.warn{color:#ff9b8a}.bp-win-stats b.sm{font-size:.9rem}
+/* 確認すること（窓の中・1件1行） */
+.bp-win .bp-bubble{position:static!important;max-height:none!important;width:auto!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important}
+.bp-win .bp-bubble::before,.bp-win .bp-bubble::after{display:none!important}
+.bp-win .bb-head{display:flex;align-items:center;gap:6px;min-height:32px}.bp-win .bb-head>b{display:none}.bp-win .bb-head>span{flex:1;font-size:.8rem;color:#ffd75e;font-weight:800}
+.bp-win .bb-head button{min-height:32px;min-width:32px;border:1px solid #8fa6cc;border-radius:4px;background:none;color:#fff}
+.bp-win .bb-table{width:100%;border-collapse:collapse;border:0!important}.bp-win .bb-table thead{display:none}
+.bp-win .bb-table td{border:0!important;border-bottom:1px dashed #33507e!important;padding:4px 2px!important;background:none!important;vertical-align:middle}
+.bp-win .bb-two{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;margin-top:4px;font-size:.72rem;color:#b9c6e8}.bp-win .bb-two h4{margin:0;font-size:.68rem;color:#b9c6e8}.bp-win .bb-two p{margin:0 0 2px;color:#fff;font-size:.74rem}
+.bp-win .bb-actions{margin-top:4px}.bp-win .bb-actions button{width:100%;min-height:38px;border:2px solid #fff;border-radius:4px;background:none;color:#fff}
+/* 設備は1行（絵と状態だけ） */
+.bp-win .bp-units{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;border-top:1px dashed #33507e;padding-top:4px}
+.bp-win .bp-unit{border:1px solid #4d6a88;border-radius:4px;padding:3px 5px;background:none;color:#fff;font-size:.7rem;text-align:left}
+/* ボタン：▶ 点検する を黄色で一番目立たせる */
+.bp-win .bp-actions{display:grid;grid-template-columns:1fr;gap:5px}
+.bp-win .bp-actions button{min-height:44px;border:2px solid #fff;border-radius:4px;background:none;color:#fff;font-weight:700}
+.bp-win .bp-actions .bp-primary{border-color:#ffd75e!important;color:#ffd75e!important;font-size:1rem;font-weight:800;background:none!important;box-shadow:none!important}
+.bp-win .bp-bubble .bb-table thead,.bp-win .bp-bubble .bb-table>thead>tr{display:none!important}
+.bp-win .bb-head button{min-height:30px!important;min-width:30px!important;padding:0 6px!important;font-size:.72rem!important}
+.bp-win .bb-table .bt-act{width:60px}.bp-win .bb-table .bt-stage{width:44px}.bp-win .bb-table .bt-date{width:48px}.bp-win .bb-table .way-chip{min-height:34px;width:100%}
+/* 確認することは盤の上に重ねて出す（選択中の窓とは分ける）。色の説明は「？」で開く */
+.board-screen .bp-cabinet{position:relative}
+.bp-cabinet>.bp-bubble{position:absolute!important;inset:2px;z-index:6;max-height:none!important;width:auto!important;overflow:auto;padding:8px 10px!important;border:3px solid #fff!important;border-radius:6px;background:#0b1f5a!important;box-shadow:0 0 0 2px #000,0 6px 18px #000c!important;color:#fff}
+.bp-cabinet>.bp-bubble::before,.bp-cabinet>.bp-bubble::after{display:none!important}
+.bp-cabinet>.bp-bubble .bb-head{display:flex;align-items:center;gap:6px}.bp-cabinet>.bp-bubble .bb-head>span{flex:1;font-size:.78rem;color:#ffd75e;font-weight:800}
+.bp-cabinet>.bp-bubble .bb-head button{min-height:32px;min-width:32px;padding:0 6px;border:1px solid #8fa6cc;border-radius:4px;background:none;color:#fff}
+.bp-cabinet>.bp-bubble .bb-table thead{display:none!important}.bp-cabinet>.bp-bubble .bb-table{width:100%;border-collapse:collapse;border:0!important}.bp-cabinet>.bp-bubble .bb-table td{border:0!important;border-bottom:1px dashed #33507e!important;background:none!important;padding:4px 2px!important}
+.bp-cabinet>.bp-bubble .bt-act{width:60px}.bp-cabinet>.bp-bubble .bt-stage{width:44px}.bp-cabinet>.bp-bubble .bt-date{width:48px}
+.bp-cabinet>.bp-bubble .bb-two{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;margin-top:4px;font-size:.72rem}.bp-cabinet>.bp-bubble .bb-two h4{margin:0;font-size:.68rem;color:#b9c6e8}.bp-cabinet>.bp-bubble .bb-two p{margin:0 0 2px;font-size:.74rem}
+.bp-cabinet>.bp-bubble .bb-actions button{width:100%;min-height:38px;border:2px solid #fff;border-radius:4px;background:none;color:#fff}
+.board-screen>.bp-legend{display:none!important}
+.bp-help{flex:none;min-width:36px;min-height:30px;border:1px solid #9ed7c4;border-radius:5px;background:#0b3f3a;color:#f2fbf6;font-weight:800}
+.bp-win-attn{min-height:40px;border:2px solid #ffd75e;border-radius:4px;background:none;color:#ffd75e;font-weight:800;text-align:left;padding:0 10px}
+.bp-legend-win{display:flex;flex-direction:column;gap:8px}.bp-legend-win .bp-legend-colors,.bp-legend-win .bp-legend-marks{display:flex;flex-wrap:wrap;gap:6px 12px}
+/* 窓を動かさずに収める：ページの段は細く（1ページだけのときは番号を出さない）、設備は1行、ボタンは横に2つ */
+.board-screen .bp-pages{min-height:0!important;justify-content:flex-end;gap:6px}.board-screen .bp-pages>button{min-height:32px!important;height:32px}
+.board-screen .bp-pages .bp-help{flex:0 0 40px!important;width:40px!important;max-width:40px;padding:0!important;opacity:1!important;background:#0b3f3a!important;color:#f2fbf6!important;border:1px solid #9ed7c4!important}
+.bp-win .bp-unit{display:flex!important;align-items:center;gap:4px;min-height:34px;padding:2px 5px!important;overflow:hidden}
+.bp-win .bp-unit>p{margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bp-win .bp-unit>p~p{display:none}
+.bp-win .bp-unit>p small{display:none}.bp-win .bp-unit>b{font-size:.72rem;white-space:nowrap}.bp-win .bp-unit svg,.bp-win .bp-unit img{width:16px;height:16px;flex:none}
+.bp-win .bp-actions{grid-template-columns:3fr 2fr!important}.bp-win .bp-actions button{font-size:.8rem}
+.bp-win{gap:5px!important}.bp-win .bp-win-stats{padding:0 0 3px}
+.board-screen .bp-pages>button.bp-help{flex:0 0 40px!important;width:40px!important;min-width:40px!important;max-width:40px!important}
+.board-screen .bp-pages>.bp-menu{flex:0 0 auto!important;width:auto!important}
+@container board (max-height:520px){.bp-win .bp-win-head{order:-3}.bp-win .bp-win-stats{order:-2}.bp-win .bp-actions{order:-1}}
+/* 設備の簡易データ（3つの箱・どれも押すと詳しく） */
+.bp-win .bp-unit{display:grid!important;grid-template-columns:auto 1fr;grid-auto-rows:auto;align-items:center;gap:1px 4px;min-height:58px;padding:4px 6px!important;border:2px solid #8fa6cc!important;border-radius:5px;background:#061238!important;color:#fff!important;text-align:left}
+.bp-win .bp-unit>b{font-size:.78rem;color:#ffd75e}.bp-win .bp-unit>p{grid-column:1/-1;display:flex!important;justify-content:space-between;gap:4px;margin:0;font-size:.72rem;white-space:nowrap;overflow:hidden}
+.bp-win .bp-unit>p~p{display:flex!important}.bp-win .bp-unit>p small{display:inline!important;color:#b9c6e8;font-size:.62rem}
+.bp-win .bp-unit-btn{cursor:pointer}.bp-win .bp-unit-btn:active{border-color:#ffd75e!important}
+/* 確認することの数（不具合の横）。押すと盤の上に出す */
+.bp-win-attn{display:inline-flex!important;align-items:center;gap:3px;min-height:32px;min-width:44px;padding:0 8px!important;border:2px solid #ffd75e;border-radius:16px;background:none;color:#ffd75e;font-weight:800;vertical-align:middle;margin-right:4px}
+.bp-win-attn small{font-size:.6rem}.bp-win-attn.k-alarm{border-color:#ff8a7a;color:#ff9b8a}
+/* 点検の画面で開く窓（一覧・通信・設備情報など）も本部・地図と同じ紺の窓 */
+#dialog.gm-dlg input,#dialog.gm-dlg select,#dialog.gm-dlg textarea{border:2px solid #fff!important;border-radius:4px;background:#061238!important;color:#fff!important}
+#dialog.gm-dlg label,#dialog.gm-dlg .form-field{color:#dfe9f3}
+#dialog.gm-dlg .modal-body p,#dialog.gm-dlg .small-note{color:#dfe9f3}
+#dialog.gm-dlg button.primary,#dialog.gm-dlg [type=submit]{background:none!important;border:2px solid #ffd75e!important;color:#ffd75e!important;font-weight:800}
+#dialog.gm-dlg .form-footer{background:#081428!important;border-top:3px solid #fff}
+#dialog.gm-dlg table,#dialog.gm-dlg th,#dialog.gm-dlg td{border-color:#33507e!important;background:none!important;color:#fff}
+#dialog.gm-dlg th{color:#b9c6e8;font-weight:600}
+#dialog.gm-dlg .inspection-entry-section,#dialog.gm-dlg .panel{background:#0b1f5a!important;border:3px solid #fff!important;border-radius:6px;color:#fff!important}
+#dialog.gm-dlg .inspection-appointment,#dialog.gm-dlg .inspection-site-row button{background:#061238!important;border:2px solid #8fa6cc!important;color:#fff!important}
+#dialog.gm-dlg .inspection-appointment b,#dialog.gm-dlg h2,#dialog.gm-dlg h3,#dialog.gm-dlg h4{color:#fff!important}
+#dialog.gm-dlg .inspection-appointment span:last-child{color:#ffd75e}
+#dialog.gm-dlg details>summary{color:#fff}
+.bp-win .bp-win-stats{gap:2px 10px!important}.bp-win .bp-win-stats b{font-size:1.3rem}.bp-win .bp-win-stats b.sm{font-size:.82rem}
+.bp-win .bp-actions button{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 6px}
+/* 設備の絵はランプの色：緑＝正常（通信の判定あり）／水色＝値あり（判定はしない）／黄＝注意／赤＝異常／灰＝未取得・不明 */
+.bp-win .bp-unit{--lamp:#8fa6cc}
+.bp-win .bp-unit.lamp-normal{--lamp:#5fe39a;--lamp-glow:#5fe39a88;border-color:#5fe39a!important}
+.bp-win .bp-unit.lamp-known{--lamp:#46e0f0;--lamp-glow:#46e0f066}
+.bp-win .bp-unit.lamp-caution{--lamp:#ffd23c;--lamp-glow:#ffd23c88;border-color:#ffd23c!important}
+.bp-win .bp-unit.lamp-alarm{--lamp:#ff5a4a;--lamp-glow:#ff5a4aaa;border-color:#ff5a4a!important}
+.bp-win .bp-unit.lamp-unknown,.bp-win .bp-unit.lamp-none{--lamp:#8fa6cc}
+.bp-win .bp-unit>b{color:#fff!important}
+.bp-cabinet>.bp-bubble tr:has(.k-alarm){--lamp:#ff5a4a;--lamp-glow:#ff5a4aaa}.bp-cabinet>.bp-bubble tr:has(.k-caution){--lamp:#ffd23c;--lamp-glow:#ffd23c88}.bp-cabinet>.bp-bubble tr:has(.k-unknown){--lamp:#8fa6cc}
+.bp-cabinet>.bp-bubble.bb-pos-bottom{inset:auto 2px 2px 2px!important;top:auto!important;height:58%}
+.bp-cabinet>.bp-bubble.bb-pos-top{inset:2px 2px auto 2px!important;bottom:auto!important;height:58%}
+.bp-cabinet>.bp-bubble{display:block!important}.bp-cabinet>.bp-bubble .bb-body{overflow:visible!important;max-height:none!important;min-height:0!important;flex:none!important}
+.bp-cabinet>.bp-bubble .bb-head{position:sticky;top:-8px;z-index:1;background:#0b1f5a;margin:-8px -10px 4px;padding:6px 10px}
+/* 確認することの印：丸だけにしない。異常＝赤い四角に「!」／注意＝工事現場の黄と黒のしま／不明＝灰色の丸に「?」。薄い＝確認済み（新ではない） */
+.bp-attn::after{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:900 clamp(6px,0.8em,9px)/1 system-ui,sans-serif;pointer-events:none}
+.bp-attn.k-alarm{border-radius:2px!important;background:#ff3b3b!important}
+.bp-attn.k-alarm::after{content:"!";color:#fff}
+.bp-attn.k-caution{border-radius:2px!important;background:repeating-linear-gradient(-45deg,#ffd23c 0 2.2px,#1b1206 2.2px 4.4px)!important;box-shadow:0 0 0 1.5px #ffd23c,0 1px 2px #000!important}
+.bp-attn.k-caution.is-old{box-shadow:0 0 0 1.5px #ffd23c80!important}
+.bp-attn.k-unknown{border-radius:50%!important;background:#b9c0c7!important}
+.bp-attn.k-unknown::after{content:"?";color:#26323b}
+.bp-legend .bp-attn,.bp-legend-win .bp-attn{width:12px!important;height:12px!important;vertical-align:-1px;margin-right:2px}
+/* 色の役目（2026-11-03）：赤＝要対応・異常／黄と黒のしま＝注意／黄＝数字と押すボタン／緑・水色＝進み具合。盤は金色をやめ、本物の貸金庫と同じ鉄色の扉（取っ手だけ真鍮） */
+.bp-alert.has{padding:0 8px!important;border:1px solid #ff8a7a!important;border-radius:6px;background:linear-gradient(180deg,#7a1f1a,#5a1512)!important;box-shadow:inset 0 0 0 1px #ff8a7a,0 0 8px #ff5a4a66;animation:hq-alert-blink 2.4s ease-in-out infinite}
+.bp-alert.has small,.bp-alert.has b{color:#fff!important}
+body.motion-off .bp-alert.has{animation:none}
+.board-screen .bp-cabinet{background:linear-gradient(180deg,#3a4656,#283240 45%,#1b232e)!important;box-shadow:inset 0 1px 0 #5d6c80,inset 0 -1px 0 #0d1218,inset 0 0 0 1px #121820,0 3px 10px #0008!important}
+.board-screen .bp-grid{background:#0a0e14!important}
+.board-screen .bp-door,.board-screen .bp-door:hover{background:repeating-linear-gradient(90deg,#ffffff08 0 1px,#0000 1px 3px),linear-gradient(180deg,#5d6b7c 0,#4a5768 35%,#3b4655 65%,#2c3542 100%)!important;border-color:#1a222c!important}
+.board-screen .bp-door::after{border-color:#1a222c80!important}
+.board-screen .bp-door .bp-no{background:linear-gradient(180deg,#0b0f15,#151c26)!important;box-shadow:inset 0 1px 2px #000,0 1px 0 #8a99ab80!important}
+.board-screen .c-complete{--no:#5fe39a}.board-screen .c-pending{--no:#5cd2ff}.board-screen .c-none{--no:#8a96a5}
+.board-screen .bp-door.is-selected{outline:2px solid #fff!important;box-shadow:inset 1px 1px 0 #8a99ab,inset -1px -1px 0 #1a222c,0 0 10px 2px #5cd2ff88!important}
+.board-screen .bp-slot{background:#121a24!important;color:#4d5a68!important;border-color:#0a0e14!important}
+.bp-pk{background:linear-gradient(180deg,#5d6b7c,#3b4655)!important;color:#5cd2ff!important;border-color:#1a222c!important}.bp-pk.c-complete{color:#5fe39a!important}.bp-pk.c-none{color:#c3ccd6!important}.bp-pk.is-empty{background:#121a24!important;color:#4d5a68!important}
+.bp-win-tok{background:#061238!important;color:#fff!important;border:2px solid #fff;font-size:.9rem!important}
+.bp-pick .bp-pick-no b{color:#fff!important}
+.board-screen .bp-grid .bp-slot{background:linear-gradient(180deg,#0e141c,#151d28)!important;box-shadow:inset 0 2px 4px #000c,inset 0 0 0 1px #243040!important}.board-screen .bp-grid .bp-slot>span{color:#4d5a68!important}
+/* 印（2026-11-03）：🚨緊急（点滅）／⚠要対応（地図・本部と同じ赤地に白）／⏳様子見／？不明 */
+.bp-attn.k-alarm{border-radius:3px!important;background:#ff3b3b!important}
+.bp-attn.k-alarm::after{content:"🚨"!important;font-size:clamp(7px,1em,11px)!important;color:initial}
+.bp-attn.k-alarm.is-new{animation:hq-alert-blink 1.6s ease-in-out infinite}
+.bp-attn.k-caution{border-radius:3px!important;background:linear-gradient(180deg,#b3261e,#7a1f1a)!important;box-shadow:0 0 0 1.5px #ff8a7a,0 1px 2px #000!important}
+.bp-attn.k-caution::after{content:"⚠"!important;color:#fff!important;font-size:clamp(6px,.85em,10px)!important}
+.bp-attn.k-caution.is-old{box-shadow:0 0 0 1.5px #ff8a7a80!important}
+.bp-attn.k-watch{border-radius:3px!important;background:#2a3a52!important;box-shadow:0 0 0 1.5px #8fa6cc,0 1px 2px #000!important}
+.bp-attn.k-watch::after{content:"⏳";font-size:clamp(6px,.85em,10px);color:initial}
+body.motion-off .bp-attn.k-alarm{animation:none}
+.id-level{display:flex;flex-wrap:wrap;gap:6px;border:0;padding:0;margin:0 0 8px}.id-level legend{font-size:.8rem;margin-bottom:4px}
+.lv-chip{display:flex;align-items:center;gap:5px;min-height:40px;padding:0 10px;border:2px solid #8fa6cc;border-radius:6px;color:#fff;font-weight:700}
+.lv-chip input{position:absolute;opacity:0;pointer-events:none}.lv-chip small{font-size:.62rem;color:#b9c6e8;font-weight:400}
+.lv-chip:has(input:checked){border-color:#ffd75e;background:#0b1f5a}
+.lv-chip .bp-attn{width:16px!important;height:16px!important}
+.id-level{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))}.id-level legend{grid-column:1/-1}.lv-chip{flex-direction:column;justify-content:center;gap:1px;padding:4px 2px!important;text-align:center}
+/* 要対応の印は黄色地に黒の⚠（緊急の赤と見分ける）。点検の画面では、要対応でないもの（点検するボタン・決定・数字）は黄色を使わない */
+.bp-attn.k-caution{background:#ffd23c!important;box-shadow:0 0 0 1.5px #1b1206,0 1px 2px #000!important}
+.bp-attn.k-caution::after{content:"⚠"!important;color:#1b1206!important}
+.bp-attn.k-caution.is-old{box-shadow:0 0 0 1.5px #1b120680!important}
+.bp-win .bp-actions .bp-primary{border-color:#46e0f0!important;color:#46e0f0!important}
+.bp-win .bp-win-stats b{color:#fff}.bp-win .bp-win-stats b.warn{color:#ff9b8a}
+.lv-chip:has(input:checked){border-color:#46e0f0!important}
+body[data-page=inspections] #dialog.gm-dlg button.primary,body[data-page=inspections] #dialog.gm-dlg [type=submit],body[data-page=visit] #dialog.gm-dlg button.primary,body[data-page=visit] #dialog.gm-dlg [type=submit],body[data-page=record] #dialog.gm-dlg button.primary,body[data-page=record] #dialog.gm-dlg [type=submit]{border-color:#46e0f0!important;color:#46e0f0!important}
+/* 対処のしかた：色分けをやめ、同じ紺の札に絵（車＝現地／画面と電波＝遠隔／ヘルメットの人と矢印＝外部／点線の？＝未定） */
+.way-chip,.w-現地,.w-遠隔,.w-外部,.w-未定{color:#fff!important;border:2px solid #8fa6cc!important;background:#0b1f5a!important}
+.w-未定{border-style:dashed!important}
+.way-chip svg{width:18px!important;height:18px!important}
+.id-way .way-chip{flex-direction:column;gap:2px;min-height:54px!important}.id-way .way-chip svg{width:24px!important;height:24px!important}
+.id-way .way-chip:has(input:checked){border-color:#46e0f0!important;outline:0!important;box-shadow:0 0 0 2px #46e0f0}
+.bb-table .way-chip svg{width:15px!important;height:15px!important}
+/* 内容の種類の絵（外観・表示・温度・音・受信・警報・緊急・その他） */
+.cat-ic{display:inline-grid;place-items:center;width:24px;height:24px;border:0!important;background:none!important;border-radius:0!important}
+.cat-ic svg{width:100%!important;height:100%!important}
+.eq-cell small{white-space:nowrap}.item-detail .eq-cell{display:inline-flex;align-items:center;gap:4px}
+.board-screen .bp-pages>button.bp-help{font-size:1.1rem!important}
+.lg-sec{display:flex;flex-direction:column;gap:6px;padding-top:8px;border-top:1px dashed #33507e}
+.lg-sec>b{font-size:.84rem;color:#fff}
+.lg-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 10px}
+.lg-item{display:grid;grid-template-columns:26px 1fr;grid-template-rows:auto auto;column-gap:6px;align-items:center}
+.lg-item svg{grid-row:1/3;width:26px;height:26px}.lg-item b{font-size:.84rem}.lg-item small{font-size:.64rem;color:#b9c6e8}
+/* 選択中の窓の要対応の札：上の「要対応 n件」と同じ黄色地に黒で大きく（緊急は赤） */
+.bp-win .bp-win-attn{display:inline-flex!important;align-items:center;gap:4px;min-height:40px!important;padding:0 12px!important;border:1px solid #1b1206!important;border-radius:6px!important;background:#ffd23c!important;color:#1b1206!important;font-weight:800;margin-right:8px;box-shadow:0 0 8px #ffd23c88}
+.bp-win .bp-win-attn b{color:#1b1206;font-size:.86rem}.bp-win .bp-win-attn b.n{font-size:1.3rem}.bp-win .bp-win-attn small{color:#1b1206;font-size:.7rem}
+.bp-win .bp-win-attn em{font-style:normal;margin-left:4px;padding:0 5px;border-radius:8px;background:#1b1206;color:#ffd23c;font-size:.66rem}
+.bp-win .bp-win-attn .bp-attn{width:18px!important;height:18px!important;box-shadow:none!important}
+.bp-win .bp-win-attn.k-alarm{background:#e2483a!important;box-shadow:0 0 8px #ff5a4aaa}.bp-win .bp-win-attn.k-alarm b,.bp-win .bp-win-attn.k-alarm small{color:#fff}
+.bp-win .bp-win-attn.k-watch,.bp-win .bp-win-attn.k-unknown{background:#3a4656!important;box-shadow:none}.bp-win .bp-win-attn.k-watch b,.bp-win .bp-win-attn.k-watch small,.bp-win .bp-win-attn.k-unknown b,.bp-win .bp-win-attn.k-unknown small{color:#fff}
+.bp-win .bp-win-stats{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;gap:6px!important;overflow:hidden;white-space:nowrap}.bp-win .bp-win-stats>span{flex:none}.bp-win .bp-win-stats small{font-size:.62rem}.bp-win .bp-win-stats b{font-size:1.1rem}.bp-win .bp-win-stats b.sm{font-size:.74rem}.bp-win .bp-win-stats .bp-win-attn{flex:none;margin-right:2px;padding:0 8px!important}
+.bp-win .bp-win-attn small{display:none}.bp-win .bp-win-attn{gap:3px;padding:0 6px!important}.bp-win .bp-win-attn b{font-size:.78rem}.bp-win .bp-win-attn b.n{font-size:1.15rem}.bp-win .bp-win-stats{gap:5px!important}.bp-win .bp-win-stats>span>small:last-child:not(:first-child){margin-right:0}

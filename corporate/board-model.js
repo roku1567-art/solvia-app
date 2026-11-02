@@ -1,5 +1,5 @@
 import {inspectionPeriod,unresolvedItems} from './map-summary.js';
-import {eventsFor,equipmentFor} from './integration-model.js';
+import {eventsFor,equipmentFor,regionOf as regionOfSite} from './integration-model.js';
 import {day,validDay} from './model.js';
 // 全体監視盤の拠点番号（boardNo）。拠点IDとは別の、表示用の安定した通し番号。
 // 規則: 振り直さない／削除・並べ替え・名称変更で変えない／欠番は再利用しない。
@@ -37,9 +37,13 @@ export function boardPages(d,size=BOARD_PAGE_SIZE){
 export const BOARD_PERIODS=[['today','本日'],['month','今月'],['comm','通信']];
 // 銀プレートは蓄電池・PCS・通信の3種。太陽光（パネル類）は「その他の設備」として扱い、既存の pv 記録は変えない。
 export const PLATES={battery:'蓄電池',pcs:'PCS',comm:'通信',other:'その他の設備'};
-export const MARK_ORDER={alarm:0,caution:1,unknown:2};
-export const ALARM_SEVERITIES=['異常','注意','不明'];
-const sevMark={'異常':'alarm','注意':'caution','不明':'unknown'};
+// 印の区分（2026-11-03）：alarm＝緊急（🚨すぐ行く・止める）／caution＝要対応（⚠直す）／watch＝様子見（⏳続けて見る）／unknown＝不明（?）。
+// 今までの記録の「異常」は緊急、「注意」は要対応として読む（記録は書き換えない）。
+export const MARK_ORDER={alarm:0,caution:1,watch:2,unknown:3};
+export const LEVELS=['緊急','要対応','様子見','不明'];
+const levelMark={'緊急':'alarm','要対応':'caution','様子見':'watch','不明':'unknown'};
+export const ALARM_SEVERITIES=['異常','注意','様子見','不明'];
+const sevMark={'異常':'alarm','緊急':'alarm','注意':'caution','要対応':'caution','様子見':'watch','不明':'unknown'};
 const time=v=>{const t=Date.parse(v||'');return Number.isFinite(t)?t:null;};
 // 設備ID（siteId:battery 等）から銀プレートの種類を返す。対象が特定できない場合は null。
 export function plateOf(siteId,equipmentId){if(!equipmentId)return null;if(equipmentId==='comm')return 'comm';const m=String(equipmentId).match(/^(.*):(battery|pcs|pv|comm)(?:#.*)?$/);return m&&m[1]===siteId?(m[2]==='pv'?'other':m[2]):null;}
@@ -90,7 +94,7 @@ export function boardSummary(d,{today=day(),now=Date.now()}={}){
   const sites=boardSites(d),issues=unresolvedItems(d),rowIds=new Set(issues.rows.map(r=>r.id)),alarms=sites.flatMap(s=>activeAlarms(s).map(a=>({...a,siteId:s.id,linked:!!a.issueId&&rowIds.has(a.issueId)})));
   const comm={normal:0,unknown:0,caution:0,alarm:0,none:0};for(const s of sites)comm[commState(s,now).state]++;
   return {sites:sites.length,unnumbered:(d?.sites||[]).length-sites.length,today:inspectionPeriod(d,{period:'today',today}),month:inspectionPeriod(d,{period:'month',today}),
-    issues:{known:issues.known,count:issues.rows.length,issue:issues.rows.filter(r=>r.type==='issue').length,incident:issues.rows.filter(r=>r.type==='incident').length,rows:issues.rows},
+    issues:{known:issues.known,count:issues.rows.length+attentionExtras(d,now).length,issue:issues.rows.filter(r=>r.type==='issue').length,incident:issues.rows.filter(r=>r.type==='incident').length,rows:issues.rows},
     alarms:{active:alarms.length,linked:alarms.filter(a=>a.linked).length,unlinked:alarms.filter(a=>!a.linked).length,rows:alarms},comm,
     watched:sites.filter(s=>s.watch?.on).length};
 }
@@ -118,18 +122,22 @@ const DAY=86400000;
 const sinceOf=v=>{const t=Date.parse(v||'');return Number.isFinite(t)?t:null;};
 // 確認済みの記録：site.review = {at, keys:[確認済みにした項目のキー]}。「確認した」ボタンか点検の完了で更新する。
 export function reviewKeys(s){return new Set(Array.isArray(s?.review?.keys)?s.review.keys:[]);}
+// 要対応の数（本部・地図・点検の札）は「確認すること全部」でそろえる：記録した不具合・緊急対応（unresolvedItems）に、機器の警報と通信の受信の問題を足す。不具合に結び付けた警報は二重に数えない。
+export function attentionExtras(d,now=Date.now()){const rows=[];for(const s of (Array.isArray(d?.sites)?d.sites:[]))for(const i of siteAttention(d,s,now).items)if((i.source==='alarm'&&!(s.monitoring?.alarms||[]).find(x=>'alarm:'+x.id===i.key)?.issueId)||i.source==='comm')rows.push({id:i.key,key:i.key,type:i.source,title:i.title,siteId:s.id,siteName:s.name,region:regionOfSite(s),status:i.stage,kind:i.kind,createdAt:i.since||'',occurredAt:i.since||''});return rows;}
 export function siteAttention(d,s,now=Date.now()){
   const items=[],seen=reviewKeys(s),visits=(d.visits||[]).filter(v=>v.siteId===s.id&&v.status==='complete').map(v=>sinceOf(v.at)).filter(t=>t!==null);
   const push=(key,target,kind,title,since,extra={})=>{const t=sinceOf(since);items.push({key,target,kind,title:title||'内容未記入',since:t===null?null:new Date(t).toISOString(),days:t===null?null:Math.floor((now-t)/DAY)+1,spanned:t===null?null:visits.filter(v=>v>t).length,isNew:!seen.has(key),...extra});};
   for(const i of unresolvedItems(d).rows.filter(i=>i.siteId===s.id))push((i.type==='incident'?'incident:':'issue:')+i.id,i.type==='issue'?plateOf(s.id,i.equipmentId):null,'caution',i.title||i.event,i.createdAt||i.occurredAt,{source:i.type});
-  for(const a of activeAlarms(s)){const target=a.target==='comm'?'comm':plateOf(s.id,a.target);push('alarm:'+a.id,target,({'異常':'alarm','注意':'caution'})[a.severity]||'unknown',a.text||'警報',a.occurredAt,{source:'alarm',code:a.code||'',text:a.text||'',severityText:a.severityText||''});}
+  for(const a of activeAlarms(s)){const target=a.target==='comm'?'comm':plateOf(s.id,a.target);push('alarm:'+a.id,target,sevMark[a.severity]||'unknown',a.text||'警報',a.occurredAt,{source:'alarm',code:a.code||'',text:a.text||'',severityText:a.severityText||''});}
   const c=commState(s,now);
   if(s.monitoring?.comm?.mode==='接続'&&c.mark&&!activeAlarms(s).some(a=>a.target==='comm')){const last=sinceOf(c.lastReceivedAt),stale=s.monitoring.comm.staleMinutes;push('comm:'+c.label,'comm',c.mark,c.label==='未更新'?'受信が止まっている':c.label==='未受信'?'受信を確認できない':c.label,c.label==='未更新'&&last!==null&&stale?new Date(last+stale*60000).toISOString():null,{source:'comm'});}
   // 内容の種類（アイコン用）と、確認のときに選んだ対処（現地・遠隔・外部・未定）と詳細
   const acts=s.review?.actions||{};for(const i of items){const issue=i.source==='issue'?(s.field?.issues||[]).find(x=>'issue:'+x.id===i.key):null;i.category=issue?(CATEGORIES.includes(issue.category)?issue.category:'その他'):i.source==='incident'?'緊急':i.target==='comm'?'受信':i.source==='alarm'?'警報':'その他';i.action=acts[i.key]||null;i.recur=recurCount(s,i);}
   // 段階：新 → 確認済み → 対応中 → 解決（解決したものは一覧から消え「過去」へ）。不具合の「確認中」は対応中として扱う。
+  // 人が選んだ区分（緊急・要対応・様子見・不明）があれば、それを使う。不具合の重さ「緊急」「様子見」も読む。緊急対応の記録は緊急。
+  const lv=s.review?.levels||{};for(const i of items){const issue=i.source==='issue'?(s.field?.issues||[]).find(x=>'issue:'+x.id===i.key):null;if(i.source==='incident')i.kind='alarm';else if(issue&&levelMark[issue.severity])i.kind=levelMark[issue.severity];if(levelMark[lv[i.key]?.level])i.kind=levelMark[lv[i.key].level];i.level=Object.keys(levelMark).find(k=>levelMark[k]===i.kind);}
   const prog=s.review?.progress||{};for(const i of items){const issue=i.source==='issue'?(s.field?.issues||[]).find(x=>'issue:'+x.id===i.key):null;i.stage=prog[i.key]?.state==='対応中'||issue?.status==='確認中'?'対応中':i.isNew?'新':'確認済み';if(i.stage==='対応中')i.isNew=false;}
-  const order={alarm:0,caution:1,unknown:2};items.sort((a,b)=>(b.isNew-a.isNew)||order[a.kind]-order[b.kind]);
+  const order=MARK_ORDER;items.sort((a,b)=>(b.isNew-a.isNew)||order[a.kind]-order[b.kind]);
   const worst=items.map(i=>i.kind).sort((a,b)=>order[a]-order[b])[0]||null;
   return {items,count:items.length,newCount:items.filter(i=>i.isNew).length,worst,hasNew:items.some(i=>i.isNew)};
 }

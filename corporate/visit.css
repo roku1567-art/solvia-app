@@ -93,3 +93,15 @@ body[data-page=visit] #page{padding:0!important;background:radial-gradient(120% 
 .visit2 .visit-save .primary{color:var(--cyan)!important;background:#0b1b30!important}
 .cs-photos{flex:none;display:flex;align-items:center;gap:8px;margin-top:6px;min-height:42px;padding:0 10px;border:1px solid var(--cyan);border-radius:6px;background:none;color:#dfe9f3;font-size:.78rem;text-align:left}
 .cs-photos b{flex:1;min-width:0;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cs-photos span:last-child{color:var(--cyan);white-space:nowrap}
+/* 設備の絵：そのものに見える色付きの小さな絵（銀色の札はやめた）。色は設備の種類を表し、正常・異常の判定ではない */
+.v-plate[data-k],.bp-plate[data-plate]{background:none!important;box-shadow:none!important;border-radius:0!important;color:inherit!important;filter:drop-shadow(0 1px 0 #0008)}
+.v-plate[data-k] svg,.bp-plate[data-plate] svg{width:100%!important;height:100%!important}
+.v-eqtabs .v-plate[data-k]{width:26px!important;height:26px!important}
+.bp-win .bp-unit>.bp-plate[data-plate]{width:24px!important;height:24px!important}
+.bp-bubble .bp-plate[data-plate]{width:22px!important;height:22px!important}
+.r-plate[data-k]{width:24px!important;height:24px!important}
+/* 点検の画面では黄色は「要対応（不具合・持ち越し）」だけ。まだ記録していない印などは水色にする */
+.visit2 .v-eqtabs small.is-todo,.visit2 .v-val .v-need,.visit2 .v-volt{color:var(--cyan)!important}
+.visit2 .v-none{color:var(--cyan)!important;border-color:#2f8fa0!important}
+.visit2 .v-head .v-no{background:#061238!important;color:#fff!important;border:2px solid #fff!important;box-shadow:none!important;text-shadow:none!important}
+.r-no{background:#061238!important;color:#fff!important;border:2px solid #fff!important;box-shadow:none!important;text-shadow:none!important}

@@ -131,3 +131,20 @@ body[data-page=map] .map-detail{display:flex;flex-direction:column;gap:6px;paddi
 #dialog.gm-dlg #solvia-arrival .form-footer{background:#081428;border-top:3px solid #fff}#dialog.gm-dlg #solvia-arrival .primary{background:none;border:2px solid #ffd75e;color:#ffd75e;font-weight:800}
 .map-final .landmark-map-foot .map-noloc{color:#ffd75e!important}
 #dialog.gm-dlg .si-arrive .td-btn{background:none!important;color:#fff!important}
+/* 要対応は黄色地に黒の⚠でそろえる（2026-11-03）：本部・地図・点検の要対応の札。赤は緊急だけ */
+@keyframes alert-yellow-blink{0%,100%{box-shadow:inset 0 0 0 1px #1b1206,0 0 6px #ffd23c88}50%{box-shadow:inset 0 0 0 1px #1b1206,0 0 16px #ffd23ccc}}
+body .hq-live .summary-counts .hq-alert.is-on,
+body .map-final .landmark-canvas.regional-map .region-actions>button.map-warning.has-warning,
+body .map-final .region-card .map-warning.has-warning,
+body .map-final .map-heading-progress .map-warning.has-warning,
+body .map-final .map-heading-main .map-warning.has-warning,
+body .board-screen .bp-alert.has{background:#ffd23c!important;border:1px solid #1b1206!important;color:#1b1206!important;animation:alert-yellow-blink 2.4s ease-in-out infinite!important}
+body .hq-live .summary-counts .hq-alert.is-on *,
+body .map-final .landmark-canvas.regional-map .region-actions>button.map-warning.has-warning *,
+body .map-final .region-card .map-warning.has-warning *,
+body .map-final .map-heading-progress .map-warning.has-warning *,
+body .map-final .map-heading-main .map-warning.has-warning *,
+body .board-screen .bp-alert.has *{color:#1b1206!important}
+body .hq-live .summary-counts .hq-alert.is-on svg,body .map-final .map-warning.has-warning svg{filter:none!important;stroke:#1b1206!important}
+body.motion-off .hq-alert.is-on,body.motion-off .map-warning.has-warning,body.motion-off .bp-alert.has{animation:none!important}
+.md-sum b.warn{color:#ffd23c!important}

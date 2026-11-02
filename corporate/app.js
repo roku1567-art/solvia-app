@@ -27,7 +27,7 @@ const siteName=r=>dataset()?.sites.find(s=>s.id===r.siteId)?.name||r.name||r.sit
 const tone=s=>['期限切れ','未対応','否'].includes(s)?'red':['未着手','確認待ち','保留','準備中','要確認','未確認','経過観察'].includes(s)?'amber':['完了','使用可','承認済'].includes(s)?'':'gray';
 const pill=(label,cls=tone(label))=>`<span class="pill ${cls}">${esc(label||'未入力')}</span>`;
 function toast(text){$('#toast').textContent=text;$('#toast').style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('#toast').style.display='none',4500);}
-function modal(title,html){$('#dialog').classList.remove('gm-dlg');$('#dialog-title').textContent=title;$('#dialog-body').innerHTML=`<div class="modal-body">${html}</div>`;if(!$('#dialog').open)$('#dialog').showModal();}
+function modal(title,html){$('#dialog').classList.toggle('gm-dlg',['inspections','visit','record','route'].includes(document.body.dataset.page));$('#dialog-title').textContent=title;$('#dialog-body').innerHTML=`<div class="modal-body">${html}</div>`;if(!$('#dialog').open)$('#dialog').showModal();}
 function failure(error){toast(error?.message||'処理を完了できませんでした。');const el=$('#modal-error');if(el){el.textContent=error.message;el.hidden=false;}}
 function clone(){return structuredClone(store);}
 function getData(s=store){return mode==='work'?s.work:mode==='demo'?s.demo:mode==='legacy'?s.legacySamples:s.plans.find(p=>p.id===planId);}

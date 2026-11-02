@@ -1,3 +1,4 @@
+import {eqIcon} from './eq-icons.js';
 // 点検記録（「この拠点を点検する」を押したあと）：設備タブ × 最重要／重要／所見・数値 × 親を押すと中が開く。スクロールしない1枚の画面。
 // 入力欄はすべてフォームの中に置いたまま、見せるページだけを切り替える（保存・下書き・完了の条件は今までの仕組みのまま）。
 import {siteEquipment,inspectionItems,parentRows,TIERS,DEFAULT_ITEMS,voltageClass} from './inspection-catalog.js';
@@ -7,7 +8,7 @@ import {day,inventoryState} from './model.js';
 
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const PLATE={battery:'<rect x="3" y="7" width="15.5" height="11" rx="1.6" fill="none" stroke="currentColor" stroke-width="2.2"/><rect x="18.5" y="10" width="2.6" height="5" rx=".6" fill="currentColor"/><path d="M6.5 12.5h6" stroke="currentColor" stroke-width="2.2"/>',pcs:'<rect x="5" y="3" width="14" height="18" rx="1.2" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M12 3v18M8.6 9v3.2M15.4 9v3.2" stroke="currentColor" stroke-width="2"/>',comm:'<path d="M12 10.5V21M8 21l4-10.5L16 21M9.3 16.5h5.4" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="8.2" r="1.8" fill="currentColor"/><path d="M8.4 4.6a5 5 0 0 0 0 7.2M15.6 4.6a5 5 0 0 1 0 7.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>',pv:'<path d="M4 6h16l-2 9H2Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 6 8 15M14.5 6 13.5 15M3 10.5h16" stroke="currentColor" stroke-width="1.6"/><path d="M10 15v4M6 19h8" stroke="currentColor" stroke-width="2"/>',board:'<rect x="4" y="3" width="16" height="18" rx="1.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M8 8h8M8 12h3M13 12h3M8 16h8" stroke="currentColor" stroke-width="2"/>',other:'<circle cx="6" cy="12" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="18" cy="12" r="2" fill="currentColor"/>',hv:'<path d="M13 2 5 14h6l-2 8 8-12h-6Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>'};
-const plate=k=>`<span class="v-plate" aria-hidden="true"><svg viewBox="0 0 24 24">${PLATE[k]||PLATE.other}</svg></span>`;
+const plate=k=>`<span class="v-plate" data-k="${k}" aria-hidden="true">${eqIcon(k)}</span>`;
 const VAL={'':['未確認','v-none'],'正常を確認':['○ 正常','v-ok'],'不具合あり':['⚠ 不具合','v-bad'],'対象外':['対象外','v-na']};
 const md=t=>{const v=Date.parse(t||'');return Number.isFinite(v)?new Intl.DateTimeFormat('ja-JP',{timeZone:'Asia/Tokyo',month:'numeric',day:'numeric'}).format(v):'';};
 

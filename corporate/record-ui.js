@@ -1,3 +1,4 @@
+import {eqIcon} from './eq-icons.js';
 // 写真・履歴・対処法・設備情報（「写真・履歴・対処法」を押したあと）。点検記録と同じ考え方：1枚の画面、タブ＋設備の絞り込み、押すと詳しく。
 import {siteEquipment} from './inspection-catalog.js';
 import {sitePhotos,draftPhotos,photoPair,siteHistory,siteFixes,equipmentInfo,INFO_FIELDS,LOG_KINDS} from './record-model.js';
@@ -6,7 +7,7 @@ import {siteFlow,PREUSE_DOCS,PREUSE_SUGGEST,annualCompare} from './lifecycle-mod
 
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const PLATE={battery:'<rect x="3" y="7" width="15.5" height="11" rx="1.6" fill="none" stroke="currentColor" stroke-width="2.2"/><rect x="18.5" y="10" width="2.6" height="5" rx=".6" fill="currentColor"/><path d="M6.5 12.5h6" stroke="currentColor" stroke-width="2.2"/>',pcs:'<rect x="5" y="3" width="14" height="18" rx="1.2" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M12 3v18M8.6 9v3.2M15.4 9v3.2" stroke="currentColor" stroke-width="2"/>',comm:'<path d="M12 10.5V21M8 21l4-10.5L16 21M9.3 16.5h5.4" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="8.2" r="1.8" fill="currentColor"/><path d="M8.4 4.6a5 5 0 0 0 0 7.2M15.6 4.6a5 5 0 0 1 0 7.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>',pv:'<path d="M4 6h16l-2 9H2Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 6 8 15M14.5 6 13.5 15M3 10.5h16" stroke="currentColor" stroke-width="1.6"/><path d="M10 15v4M6 19h8" stroke="currentColor" stroke-width="2"/>',board:'<rect x="4" y="3" width="16" height="18" rx="1.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M8 8h8M8 12h3M13 12h3M8 16h8" stroke="currentColor" stroke-width="2"/>',other:'<circle cx="6" cy="12" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="18" cy="12" r="2" fill="currentColor"/>',hv:'<path d="M13 2 5 14h6l-2 8 8-12h-6Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>'};
-export const plate=k=>k?`<span class="v-plate r-plate" aria-hidden="true"><svg viewBox="0 0 24 24">${PLATE[k]||PLATE.other}</svg></span>`:'<span class="r-plate r-all" title="拠点全体">全体</span>';
+export const plate=k=>k?`<span class="v-plate r-plate" data-k="${k}" aria-hidden="true">${eqIcon(k)}</span>`:'<span class="r-plate r-all" title="拠点全体">全体</span>';
 const md=v=>{const n=Date.parse(v||'');return Number.isFinite(n)?new Intl.DateTimeFormat('ja-JP',{timeZone:'Asia/Tokyo',month:'numeric',day:'numeric'}).format(n):'不明';};
 const img=src=>src==='sample-meter.svg'?'../sample-meter.svg':esc(src);
 const TONE={done:'k-done',warn:'k-warn',alarm:'k-alarm',gray:'k-gray'};

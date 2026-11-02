@@ -111,3 +111,7 @@ body.motion-off .hq-live .summary-counts .hq-alert{animation:none!important}
 .hq-attn{flex-direction:column;align-items:flex-start!important}
 @media(max-height:740px){.hq-row3>button{min-height:44px;padding-top:2px;padding-bottom:2px}.hq-donut svg{width:36px;height:36px}}
 .hq-mode.is-old{border-color:#ffd75e!important;color:#ffd75e!important;display:inline-flex;flex-direction:column;line-height:1.1}.hq-mode.is-old i{font-style:normal;font-size:.5rem}
+/* 屋上のパネル（カレンダー）の「予定」は黄色をやめ桃色にする（黄色は要対応だけ） */
+body .sw.ev{background:#ff8ac4!important}
+body .hq-live .hq-roofcal>span.pv.ev:not(.today){background:radial-gradient(circle,#ffe3f1,#ff8ac4 45%,#e0569b)!important;border:1px solid #8a1f57!important;box-shadow:0 0 5px #ff8ac4cc!important}
+body .hq-live .hq-roofcal>span.pv.today.ev{background:#ff8ac4!important;color:#3a0a22!important}
