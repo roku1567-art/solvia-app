@@ -43,3 +43,14 @@ body.motion-off .map-final .has-warning,body.motion-off .map-final .day-pending{
 .map-final .region-actions .map-warning span{display:flex;flex-direction:column;align-items:center;gap:0}.map-final .region-actions .map-warning span small{font-size:9px!important;line-height:1.1;color:inherit}.map-final .region-actions .map-warning b{float:none}
 
 .map-final .region-actions .region-today small{font-size:10px!important;line-height:1.1;white-space:normal;overflow-wrap:anywhere}.map-final .region-month>span{font-size:11px!important}.map-final .region-actions .map-warning span small{font-size:10px!important}.map-final .region-title-button strong small{font-size:10px!important}
+/* 縦が短い画面（ブラウザの枠が大きいとき）：県の札を少し低くして詰め、下の「状態・点検・設備」と重ならないようにする */
+@media(max-height:600px){
+.map-final .landmark-canvas.regional-map .region-card{height:72px!important;min-height:72px!important}
+.map-final .landmark-canvas.regional-map .region-card>button.region-title-button[data-region]{height:32px!important;min-height:32px!important}
+.map-final .landmark-canvas.regional-map .region-card>.weather-chip{height:32px!important;min-height:32px!important}
+.map-final .region-actions{height:38px}.map-final .landmark-canvas.regional-map .region-actions>button{height:38px!important;min-height:38px!important}
+.map-final .landmark-canvas.regional-map .region-0{top:calc(var(--map-top-overflow,0px) + 2px)!important}
+.map-final .landmark-canvas.regional-map .region-1{top:calc(var(--map-top-overflow,0px) + 77px)!important}
+.map-final .landmark-canvas.regional-map .region-2{top:calc(var(--map-top-overflow,0px) + 152px)!important}
+.map-final .landscape-layers button{min-height:40px!important}
+}
