@@ -465,3 +465,28 @@ body[data-page=inspections] #dialog.gm-dlg button.primary,body[data-page=inspect
 .bp-win .bp-win-attn.k-watch,.bp-win .bp-win-attn.k-unknown{background:#3a4656!important;box-shadow:none}.bp-win .bp-win-attn.k-watch b,.bp-win .bp-win-attn.k-watch small,.bp-win .bp-win-attn.k-unknown b,.bp-win .bp-win-attn.k-unknown small{color:#fff}
 .bp-win .bp-win-stats{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;gap:6px!important;overflow:hidden;white-space:nowrap}.bp-win .bp-win-stats>span{flex:none}.bp-win .bp-win-stats small{font-size:.62rem}.bp-win .bp-win-stats b{font-size:1.1rem}.bp-win .bp-win-stats b.sm{font-size:.74rem}.bp-win .bp-win-stats .bp-win-attn{flex:none;margin-right:2px;padding:0 8px!important}
 .bp-win .bp-win-attn small{display:none}.bp-win .bp-win-attn{gap:3px;padding:0 6px!important}.bp-win .bp-win-attn b{font-size:.78rem}.bp-win .bp-win-attn b.n{font-size:1.15rem}.bp-win .bp-win-stats{gap:5px!important}.bp-win .bp-win-stats>span>small:last-child:not(:first-child){margin-right:0}
+/* 上に詰める（2026-11-03）：📖 と ≣一覧 は選ぶ欄の右端に小さく。ページの段は2ページ以上のときだけ。盤と選ぶ欄は少し低く */
+.board-screen .bp-pages:not(:has([data-board-page])){min-height:0!important;height:0!important;margin-top:-2px;padding:0!important;overflow:hidden;border:0!important}
+.board-screen .bp-cabinet{height:max(180px,30%)!important}
+.bp-pick{grid-template-columns:44px minmax(0,1fr) 44px 74px 40px!important}
+.bp-pick>button{min-height:44px!important}
+.bp-pick-side{display:flex;flex-direction:column;gap:3px}
+.bp-pick-side>button{flex:1;min-height:0!important;height:auto!important;width:100%!important;padding:0!important;border:1px solid #9ed7c4!important;border-radius:4px!important;background:#0b3f3a!important;color:#f2fbf6!important;font-size:.72rem!important;display:flex!important;align-items:center;justify-content:center}
+.bp-pick-side .hq-menu-icon,.bp-pick-side svg{width:16px;height:12px}.bp-pick-side small{display:none!important}
+/* 吹き出しの中の印は外観などの絵と同じくらいの大きさに */
+body .bp-bubble .bb-table .bt-stage .bp-attn{width:24px!important;height:24px!important;margin:0 auto 2px!important;display:block}
+body .bp-bubble .bb-table .bt-stage .bp-attn::after{font-size:15px!important}
+body .bp-bubble .bb-table .bt-stage{font-size:.72rem}
+/* 吹き出しの状態：印と段階（新・確認済み・対応中）を1つの札に（選択中の窓の札と同じ形）。表ははみ出さない */
+.bp-cabinet>.bp-bubble .bb-table{table-layout:fixed;width:100%}
+.bp-cabinet>.bp-bubble .bt-date{width:42px!important}.bp-cabinet>.bp-bubble .bt-stage{width:86px!important}.bp-cabinet>.bp-bubble .bt-act{width:58px!important}
+.bp-cabinet>.bp-bubble .bt-what{overflow:hidden}
+.st-chip{display:inline-flex;align-items:center;gap:3px;min-height:30px;padding:0 7px 0 4px;border-radius:6px;border:1px solid #1b1206;background:#ffd23c;color:#1b1206;font-weight:800;font-size:.72rem;white-space:nowrap}
+.st-chip.k-alarm{background:#e2483a;color:#fff}.st-chip.k-watch,.st-chip.k-unknown{background:#3a4656;color:#fff;border-color:#8fa6cc}
+.st-chip.is-old{opacity:.6}
+body .bp-bubble .bb-table .bt-stage .st-chip .bp-attn{display:inline-block!important;width:20px!important;height:20px!important;margin:0!important;box-shadow:none!important;opacity:1!important}
+body .bp-bubble .bb-table .bt-stage .st-chip .bp-attn::after{font-size:13px!important}
+#dialog .bb-table .bt-stage .st-chip .bp-attn{display:inline-block!important;width:18px!important;height:18px!important;margin:0!important;box-shadow:none!important}
+/* 段階の字は黒地に札の色で抜く（選択中の窓の「新」と同じ見やすい形にそろえる） */
+.st-chip em{font-style:normal;padding:1px 6px;border-radius:8px;background:#1b1206;color:#ffd23c;font-size:.68rem;line-height:1.3}
+.st-chip.k-alarm em{color:#ff9b8a}.st-chip.k-watch em,.st-chip.k-unknown em{background:#0b1f5a;color:#fff}
