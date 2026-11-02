@@ -1,0 +1,276 @@
+/* 点検・全体監視盤（点検タブのみ）。本部・地図・その他・下部ナビには適用しない。
+   画面の高さちょうどの1枚：見出し2行 → 盤（残りの高さを10段で分ける） → ページ切替 → 凡例 → 選択中の枠。 */
+body[data-page=inspections]{--shell-header:0px;--shell-title:0px}
+body[data-page=inspections] header{height:auto!important;min-height:env(safe-area-inset-top)!important;padding:env(safe-area-inset-top) 0 0!important;border:0!important;background:#0b1b30}
+body[data-page=inspections] header>*{display:none!important}
+body[data-page=inspections] #page{padding:0!important;background:radial-gradient(120% 60% at 50% 0,#14304f 0,#0b1b30 55%,#08121f 100%)}
+.inspection-board-page{--bp-green:#19e0a8;--bp-blue:#2db4ff;--bp-cream:#f3ead6;--bp-gray:#c3c6cb;--bp-ink:#eef3f8;--bp-sub:#a9b8c8;--bp-line:#33506e;--bp-cyan:#46e0f0;--bp-warn:#ffd23c;--serif:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP","Noto Serif CJK JP","Times New Roman",serif;color:var(--bp-ink);max-width:560px;margin:0 auto}
+.board-screen{height:var(--board-h,auto);box-sizing:border-box;display:flex;flex-direction:column;gap:4px;padding:4px 8px 6px;overflow:hidden}
+.board-screen>*{flex:none}
+/* 見出し（2行で約56〜60px） */
+.bp-head{display:flex;align-items:center;gap:8px;min-height:28px;min-width:0}
+.bp-head h2{margin:0;font:700 1.25rem/1.1 var(--serif);letter-spacing:.03em;color:#f6f9fc;white-space:nowrap}
+.bp-total{font-size:.72rem;color:var(--bp-sub);white-space:nowrap}.bp-total b{color:var(--bp-ink);font-size:.9rem;margin:0 1px}
+.bp-alert{margin-left:auto;display:inline-flex;align-items:baseline;gap:2px;min-height:28px;padding:0 2px;border:0;background:none;color:var(--bp-sub);white-space:nowrap}
+.bp-alert small{font-size:.7rem}.bp-alert b{font-size:1.05rem;color:var(--bp-ink)}
+.bp-alert.has small,.bp-alert.has b{color:var(--bp-warn)}
+.bp-kind{border:1px solid #5d7ea3;border-radius:4px;padding:0 5px;font-size:.66rem;line-height:1.5;color:#bcd2ea;background:#18324f;white-space:nowrap}
+.bp-row2{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;border-bottom:1px solid var(--bp-line);min-height:28px}
+.bp-counts{display:flex;align-items:center;gap:2px;padding-bottom:4px;min-width:0}
+.bp-meter{display:inline-flex;align-items:baseline;gap:3px;min-height:24px;padding:0 2px;border:0;background:none;color:inherit;white-space:nowrap}
+.bp-meter small{font-size:.7rem;color:var(--bp-sub)}.bp-meter b{font-size:.92rem;font-variant-numeric:tabular-nums}.bp-meter b.dim{font-size:.76rem;color:var(--bp-sub);font-weight:400}
+.bp-dot{color:var(--bp-sub);font-size:.7rem}
+.bp-tabs{display:flex;gap:0}
+.bp-tabs button{min-height:28px;min-width:44px;padding:0 9px;border:0;background:none;color:var(--bp-sub);font-size:.82rem;border-bottom:3px solid transparent;margin-bottom:-1px}
+.bp-tabs button[aria-selected=true]{color:#fff;font-weight:700;border-bottom-color:var(--bp-cyan)}
+/* 細い木枠と、扉が並ぶ濃い面。盤は残りの高さをすべて使う */
+.bp-cabinet{flex:1 1 auto;min-height:0;display:flex;padding:4px;border-radius:3px;background:linear-gradient(180deg,#7a4a26,#5a3418 45%,#3e220f);box-shadow:inset 0 1px 0 #a06a3c,inset 0 -1px 0 #2a1508,inset 0 0 0 1px #2e1809,0 3px 10px #0008}
+.bp-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:repeat(10,minmax(0,1fr));gap:3px;padding:3px;background:#160c05;border-radius:2px;box-shadow:inset 0 2px 5px #000c}
+/* 扉：真鍮の浮き彫りの板。縦の細い筋、左に蝶番。鍵穴は付けない */
+.bp-door{--no:var(--bp-cream);container-type:size;position:relative;min-width:0;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 1px 0 8px;border:1px solid #3a2508;border-radius:2px;color:var(--no);
+  background:repeating-linear-gradient(90deg,#ffffff0d 0 1px,#0000 1px 3px),linear-gradient(180deg,#d9b25f 0,#c79b4a 30%,#b98a3e 55%,#8a6226 100%);
+  box-shadow:inset 1px 1px 0 #f1d28e,inset -1px -1px 0 #5e400f,0 1px 0 #0008;-webkit-tap-highlight-color:transparent}
+.board-screen .bp-door:hover{background:repeating-linear-gradient(90deg,#ffffff0d 0 1px,#0000 1px 3px),linear-gradient(180deg,#d9b25f 0,#c79b4a 30%,#b98a3e 55%,#8a6226 100%)}
+.bp-door::after{content:"";position:absolute;inset:2px 2px 2px 7px;border:1px solid #6e4b1560;border-radius:1px;pointer-events:none}
+.bp-hinge{position:absolute;left:2px;top:14%;bottom:14%;width:3px;border-radius:1px;background:linear-gradient(90deg,#5a3c10,#d2a957 50%,#5a3c10);box-shadow:0 0 0 1px #3a260a}
+.bp-hinge::before,.bp-hinge::after{content:"";position:absolute;left:-1px;width:5px;height:3px;background:#4b320d;border-radius:1px}.bp-hinge::before{top:1px}.bp-hinge::after{bottom:1px}
+.bp-no{font:700 clamp(11px,42cqh,16px)/1 var(--serif);letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--no);text-shadow:0 1px 0 #000,0 0 2px #000,0 0 1px #000}
+.bp-marks{display:flex;align-items:center;justify-content:center;gap:4px;height:clamp(9px,36cqh,14px);min-width:0;overflow:hidden}
+.bp-group{display:inline-flex;align-items:center;gap:0}
+.bp-door .bp-plate{width:clamp(9px,36cqh,14px);height:clamp(9px,36cqh,14px)}.bp-door .bp-plate svg{width:80%;height:80%}
+.bp-door .bp-mark,.bp-door .bp-mark svg{width:clamp(9px,34cqh,14px);height:clamp(9px,34cqh,14px)}
+.c-complete{--no:var(--bp-green)}.c-pending{--no:var(--bp-blue)}.c-none{--no:var(--bp-cream)}.c-unknown{--no:#9aa0a7}.c-neutral{--no:var(--bp-cream)}
+.bp-door.c-unknown .bp-no{text-decoration:underline dotted 2px;text-underline-offset:2px}
+/* 選択中：白い2pxの枠とやわらかい橙の光。大きさは変えない */
+.bp-door.is-selected{z-index:1;outline:2px solid #fff;outline-offset:0;box-shadow:inset 1px 1px 0 #f1d28e,inset -1px -1px 0 #5e400f,0 0 10px 2px #ffad4d99}
+.bp-door:focus-visible{outline:2px solid var(--bp-cyan);outline-offset:1px}
+/* 空き枠：扉の無い暗いくぼみ。押せない（拠点として数えない） */
+.bp-slot{display:grid;place-items:center;min-height:0;border-radius:2px;background:linear-gradient(180deg,#1a0f07,#26160a);box-shadow:inset 0 2px 4px #000c,inset 0 0 0 1px #3a2412}
+.bp-slot>span{font:600 .7rem/1 var(--serif);color:#6a5640;font-variant-numeric:tabular-nums}
+/* 銀プレート（共通部品）と状態記号 */
+.bp-plate{display:inline-grid;place-items:center;width:14px;height:14px;flex:none;border-radius:3px;color:#33393f;background:linear-gradient(160deg,#fbfcfd 0,#d5dade 45%,#aab2ba 100%);box-shadow:inset 0 0 0 1px #7d868f,0 1px 0 #0006}
+.bp-plate svg{width:11px;height:11px}
+.bp-mark{display:inline-grid;place-items:center;width:14px;height:14px;flex:none}.bp-mark svg{width:100%;height:100%;filter:drop-shadow(0 1px 0 #0008)}
+.bp-count{font-size:.6rem;color:#fff;text-shadow:0 1px 1px #000;margin-left:-1px}
+.bp-more{font-size:.6rem;font-weight:700;color:#fff;text-shadow:0 1px 1px #000}
+/* ページ切替と凡例（1行） */
+.bp-pages{display:flex;justify-content:center;gap:10px}
+.bp-pages button{min-height:30px;min-width:104px;padding:0 10px;border:1px solid #3d5a78;border-radius:5px;background:#0f2238;color:#7f93a8;font:500 .86rem/1 var(--serif);font-variant-numeric:tabular-nums;white-space:nowrap}
+.board-screen .bp-pages button:hover{background:#0f2238}
+.bp-pages button[aria-pressed=true]{border:2px solid #fff;color:#fff}
+.bp-legend{display:flex;justify-content:center;align-items:center;gap:6px;font-size:.62rem;letter-spacing:-.02em;color:var(--bp-sub);line-height:1.2;min-height:18px;white-space:nowrap;overflow:hidden}
+.bp-legend>span{display:inline-flex;align-items:center;gap:5px}.bp-legend span{display:inline-flex;align-items:center;gap:2px}
+.bp-legend b{font:700 .86rem/1 var(--serif);color:var(--no);font-variant-numeric:tabular-nums}
+.bp-legend .bp-mark{width:13px;height:13px}
+.bp-legend-sep{width:1px;height:14px;background:var(--bp-line);flex:none}
+.bp-slot-chip{display:inline-block;width:12px;height:9px;border-radius:2px;background:#26160a;box-shadow:inset 0 0 0 1px #5a3c1e}
+/* 選択中の枠 */
+.bp-brief{border:1px solid #6d86a3;border-radius:6px;background:linear-gradient(180deg,#112540,#0b1a2f);padding:4px 10px 6px}
+.bp-brief-head{display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--bp-line);padding-bottom:2px}
+.bp-brief-head h3{margin:0;font:700 .98rem/1.25 var(--serif);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
+.bp-brief-head h3 b{font-variant-numeric:tabular-nums}.bp-brief-head h3 span{overflow:hidden;text-overflow:ellipsis}
+.bp-link{border:0;background:none;padding:0 2px;color:#dfe9f3;font-size:.8rem;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center}
+.bp-star-btn{display:inline-grid;place-items:center;min-width:32px;min-height:30px;border:1px solid #4d6a88;border-radius:5px;background:none;padding:0}.bp-star-btn .bp-mark{width:16px;height:16px}.bp-mark.is-off{opacity:.35;filter:grayscale(1)}
+.bp-expand{display:none;align-items:center;min-height:30px;padding:0 7px;border:1px solid #4d6a88;border-radius:5px;background:none;color:#dfe9f3;font-size:.72rem;white-space:nowrap}
+.board-screen .bp-brief button:hover{background:none}
+.bp-brief-line{display:none;margin:3px 0 0;font-size:.76rem;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bp-brief-line small{margin-left:3px}
+.bp-brief-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid var(--bp-line)}
+.bp-brief-row>div,.bp-brief-row>button{padding:3px 6px;min-width:0}.bp-brief-row>*+*{border-left:1px solid var(--bp-line)}
+.bp-brief-row small{display:block;font-size:.68rem;color:var(--bp-sub)}.bp-brief-row p{margin:1px 0 0;font-size:.9rem;font-weight:700;line-height:1.25}
+.bp-brief-row p small{display:inline;margin-left:4px;font-weight:400}
+.bp-brief .c-complete{color:var(--bp-green)}.bp-brief .c-pending{color:var(--bp-blue)}.bp-brief .c-none{color:var(--bp-cream)}
+.bp-warn{color:var(--bp-warn)}.bp-na{color:var(--bp-sub);font-weight:400}
+.bp-unit{display:grid;grid-template-columns:auto auto 1fr;align-items:center;justify-items:start;column-gap:5px}
+.bp-unit>b{font-size:.84rem}.bp-unit>.bp-plate{width:22px;height:22px}.bp-unit>.bp-plate svg{width:17px;height:17px}.bp-unit>.bp-mark{width:16px;height:16px}
+.bp-unit>p{grid-column:1/-1;margin:1px 0 0;font-size:.76rem;font-weight:400;line-height:1.25;display:flex;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bp-unit>p small{display:inline;min-width:2.6em;margin:0}
+.bp-unit-btn{border:0;background:none;color:inherit;text-align:left;font:inherit}
+.bp-watch-note{margin:3px 0 0;font-size:.74rem;color:#dfe9f3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bp-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:5px}
+.bp-actions button{min-height:38px;border-radius:7px;border:1px solid #c9d6e3;background:transparent;color:#f3f7fb;font-weight:700;font-size:.84rem}
+.bp-actions .bp-primary{border:2px solid var(--bp-cyan)}
+/* 選択中の枠は、画面の高さに関係なく 3つの欄＋蓄電池・PCS・通信の3列を出す（1行の要約にはしない）。
+   低い画面では文字と余白を詰める。そのぶん盤の扉が低くなる。 */
+@media (max-height:760px){
+ .bp-brief{padding:2px 8px 4px}
+ .bp-brief-head h3{font-size:.88rem}.bp-star-btn,.bp-link,.bp-list-btn{min-height:26px}.bp-star-btn{min-width:28px}
+ .bp-brief-row>div,.bp-brief-row>button{padding:1px 5px}
+ .bp-brief-row small{font-size:.6rem;line-height:1.2}.bp-brief-row p{font-size:.78rem;line-height:1.2;margin:0}
+ .bp-brief-row p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bp-brief-row p small{font-size:.6rem;margin-left:2px}
+ .bp-unit>b{font-size:.74rem}.bp-unit>.bp-plate{width:16px;height:16px}.bp-unit>.bp-plate svg{width:12px;height:12px}.bp-unit>.bp-mark{width:12px;height:12px}
+ .bp-unit>p{font-size:.66rem;line-height:1.15}
+ .bp-actions{margin-top:3px}.bp-actions button{min-height:32px;font-size:.76rem}
+ .bp-watch-note{display:none}
+}
+@media (max-height:600px){.bp-head h2{font-size:1.1rem}.bp-pages button{min-height:28px}.bp-legend{min-height:16px}}
+@media (max-width:359px){.bp-head h2{font-size:1.05rem}.bp-pages button{min-width:90px}}
+@media (prefers-reduced-motion:reduce){.bp-door{transition:none}}
+.bp-empty{padding:18px 12px;border:1px dashed #4b6886;border-radius:8px;text-align:center}
+.bp-detail h3{margin:10px 0 4px;font-size:.95rem}.bp-photos{display:flex;flex-wrap:wrap;gap:6px}.bp-photos img{border-radius:4px;object-fit:cover;height:64px}
+.bp-alarm-list{display:grid;gap:6px;margin:6px 0}.bp-alarm-list article{border:1px solid #567;border-radius:6px;padding:6px 8px}.bp-alarm-list article.is-active{border-color:#e3343a}.bp-alarm-list p{margin:2px 0}
+/* 番号盤の下（画面の外）に既存の入口（今日の点検・下書き・現場一覧・各種管理）を残す */
+.inspection-entry.is-embedded{margin:12px 8px 18px;padding:0}
+/* 入力画面（☆・通信・警報）。既存フォームと同じ縦並び。 */
+#board-watch label,#board-comm label,#board-alarm label{display:flex;flex-direction:column;gap:5px;margin:12px 0}
+#board-watch label.check-confirm{flex-direction:row;align-items:center;gap:8px}
+#board-comm+h3{margin:16px 0 4px}
+/* 写真の数値読取（OCR）の候補を出す予定の枠。未実装であることを明示する。 */
+.ocr-slot{display:grid;gap:2px;margin-top:8px;padding:8px;border:1px dashed #7b93a8;border-radius:6px;font-size:.78rem;color:#4b5d6b;background:#f3f6f8}
+.ocr-slot b{font-size:.82rem;color:#1d2e3a}
+/* 点検画面：左=今回の入力／右=前回記録（参考表示のみ） */
+.visit-compare-head{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;margin:2px 0 4px;font-size:.74rem;color:#4b5d6b}
+.visit-compare-head button{min-height:32px;padding:0 10px;font-size:.76rem}
+#solvia-visit [data-check-group] label{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(84px,34%);column-gap:8px;align-items:center}
+#solvia-visit [data-check-group] label>select,#solvia-visit [data-check-group] label>input{grid-column:1}
+.visit-prev{grid-column:2;grid-row:1 / span 3;align-self:center;padding:6px;border-left:2px solid #b8c6cf;font-size:.74rem;color:#4b5d6b;line-height:1.3}
+.visit-prev-reading{display:block;font-size:.72rem;color:#4b5d6b}
+.art-comm{display:inline-grid;place-items:center;background:none!important}.art-comm svg{width:60%;height:60%}
+.equipment-tabs button{font-size:.8rem;white-space:nowrap;padding-left:2px;padding-right:2px}.inspection-diorama>button>span:nth-child(2){font-size:.7rem;white-space:nowrap}
+/* 点検後の画面：▲▼で設備を切り替える、前回から持ち越しの不具合を下に出す */
+.visit-stepper{display:grid;grid-template-columns:48px 1fr auto 48px;align-items:center;gap:6px;margin:6px 0;padding:4px;border:1px solid #9fb3bf;border-radius:8px;background:#eef3f6}
+.visit-stepper button{min-height:44px;font-size:1.1rem;padding:0}
+.visit-stepper b{text-align:center;font-size:1rem;color:#14303d}.visit-stepper small{color:#4b5d6b;font-size:.76rem}
+.visit-carried{margin:12px 0 4px;padding:8px 10px;border:1px solid #d9b44a;border-radius:8px;background:#fff8e1;color:#3b2f0a}
+.visit-carried h3{margin:0 0 6px;font-size:.95rem}.visit-carried h3 small{font-weight:400}
+.visit-carried ul{margin:0;padding:0;list-style:none;display:grid;gap:5px}
+.visit-carried li{display:grid;grid-template-columns:auto 1fr;gap:0 8px;font-size:.84rem}.visit-carried li small{grid-column:2;color:#6b5a26}
+.visit-carried button{margin-top:6px;min-height:40px}
+/* 見出し2行を約58pxに収める */
+.board-screen{gap:3px;padding-top:3px}.bp-head{min-height:26px}.bp-row2{min-height:26px}.bp-tabs button{min-height:26px}.bp-counts{padding-bottom:3px}
+.bp-brief-row p small{white-space:nowrap}
+@media (max-height:600px){.bp-actions button{min-height:34px}.bp-brief{padding:3px 8px 4px}}
+/* 空き（押すと登録）と欠番（押せない） */
+button.bp-slot{border:0;padding:0;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button.bp-slot:focus-visible{outline:2px solid var(--bp-cyan);outline-offset:1px}
+.board-screen button.bp-slot:hover{background:linear-gradient(180deg,#1a0f07,#26160a)}
+.bp-slot.is-gap>span{color:#4a3a2a;text-decoration:line-through 1px}
+.bp-list-btn{min-height:30px;padding:0 9px;border:1px solid #c9d6e3;border-radius:5px;background:none;color:#f3f7fb;font-size:.78rem;white-space:nowrap}
+/* 一覧は下から出る画面で開く（閉じると盤に戻る） */
+#dialog.is-sheet{position:fixed;z-index:60;top:auto!important;bottom:calc(var(--shell-nav,62px) + env(safe-area-inset-bottom,0px));left:0;right:0;transform:none;width:100%;max-width:560px;margin:0 auto;max-height:78vh;border-radius:12px 12px 0 0}
+.board-list-sheet .inspection-entry.is-embedded{margin:0}
+/* 設定：見本の事業場 */
+.demo-sample{display:grid;gap:4px;margin:12px 0;padding:10px;border:1px dashed #7fa8b8;border-radius:8px}
+.demo-sample small{line-height:1.5}
+/* 本日・今月の小さな輪（白＝完了の割合、灰＝残り）。行の高さは増やさない */
+.bp-meter{align-items:center;gap:4px}
+.bp-mini-ring{width:22px;height:22px;transform:rotate(-90deg);flex:none}
+.bp-mini-ring .bp-ring-bg{fill:none;stroke:#3a4c60;stroke-width:5}.bp-mini-ring .bp-ring{fill:none;stroke:#eef3f8;stroke-width:5}
+.bp-mini-pct{font-size:.62rem;color:var(--bp-sub);font-variant-numeric:tabular-nums;min-width:2.4em}
+.bp-counts{gap:6px}.bp-dot{display:none}
+/* 番号は黒い銘板の上に出す（緑・青・クリームが真鍮の上でも読める）。
+   扉が低いとき（高さ28px未満）は、銘板の右に銀プレートと記号を横に並べて、つぶれないようにする。 */
+.bp-no{padding:1px 5px 2px;border-radius:3px;background:linear-gradient(180deg,#1b1206,#2c1e0c);box-shadow:inset 0 1px 2px #000,0 1px 0 #f1d28e80;text-shadow:none;font-size:clamp(11px,40cqh,17px)}
+.bp-door{container-type:size}
+@container (max-height:27px){
+ .bp-door .bp-door-in{flex-direction:row;gap:3px}
+ .bp-door .bp-door-in .bp-no{font-size:10.5px;padding:1px 2px;letter-spacing:0}
+ .bp-door .bp-marks{height:10px;gap:1px}
+ .bp-door .bp-plate,.bp-door .bp-mark,.bp-door .bp-mark svg{width:9.5px;height:9.5px}
+}
+.bp-door-in{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:100%;height:100%;min-width:0}
+/* 扉の目印：丸1つ（色＝重さ、濃い＝新・薄い＝続）と小さな☆。丸は押しやすいよう見えない範囲を広げる */
+.bp-door .bp-door-in{flex-direction:row!important;gap:3px!important}
+.bp-attn{position:relative;display:inline-block;flex:none;width:clamp(7px,30cqh,11px);height:clamp(7px,30cqh,11px);border-radius:50%;box-shadow:0 0 0 1.5px #1b1206,0 1px 2px #000}
+.bp-door .bp-attn::before{content:"";position:absolute;inset:-6px -8px}
+.bp-attn.k-alarm{background:#ff3b3b}.bp-attn.k-caution{background:#ffd23c}.bp-attn.k-unknown{background:#b9c0c7}
+.bp-attn.is-old{opacity:.38;box-shadow:0 0 0 1.5px #1b120680}
+.bp-star-mini{font-size:clamp(8px,32cqh,12px);line-height:1;color:#f4f7fa;text-shadow:0 0 2px #000,0 0 1px #000;margin-left:-2px;align-self:flex-start;margin-top:10%}
+.bp-legend .bp-attn{width:9px;height:9px}.bp-legend .bp-star-mini{margin:0;align-self:center;font-size:.7rem}
+/* ふきだし */
+.board-screen{position:relative}
+.bp-bubble{position:absolute;z-index:6;display:flex;flex-direction:column;padding:6px 8px 8px;border:1.5px solid #f3e2b4;border-radius:8px;background:#0e1f35;box-shadow:0 6px 18px #000c;box-sizing:border-box}
+.bp-bubble::after{content:"";position:absolute;left:calc(var(--ax,50%) - 8px);width:14px;height:14px;background:#0e1f35;border:1.5px solid #f3e2b4;transform:rotate(45deg)}
+.bp-bubble.up::after{bottom:-8px;border-top:0;border-left:0}.bp-bubble.down::after{top:-8px;border-bottom:0;border-right:0}
+.bb-head{display:flex;align-items:center;gap:8px;font-size:.84rem;color:#fff;flex:none}.bb-head b{font-family:var(--serif)}.bb-head span{color:#a9b8c8;font-size:.72rem}
+.bb-head button{margin-left:auto;min-width:36px;min-height:32px;border:0;background:none;color:#dfe9f3;font-size:1.1rem}
+.board-screen .bp-bubble button:hover{background:none}
+.bb-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.bb-list{margin:2px 0 6px;padding:0;list-style:none;display:grid;gap:4px}
+.bb-list li{display:grid;grid-template-columns:12px 20px auto auto 1fr;align-items:center;gap:2px 6px;font-size:.76rem;color:#eef3f8}
+.bb-list li.is-old{color:#a9b8c8}.bb-list li .bp-attn{width:10px;height:10px}
+.bb-list .bb-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
+.bb-list li small{grid-column:2/-1;font-size:.66rem;color:#a9b8c8;line-height:1.3}
+.bb-two{display:grid;grid-template-columns:1.2fr 1fr;gap:8px;border-top:1px solid var(--bp-line);padding-top:5px}
+.bb-two h4{margin:0 0 2px;font-size:.68rem;color:#a9b8c8;font-weight:400}.bb-two p{margin:0 0 4px;font-size:.74rem;line-height:1.35}
+.bb-look{display:flex;gap:6px;align-items:flex-start}.bb-look img{width:56px;height:56px;object-fit:cover;border-radius:4px;flex:none}
+.bb-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px;flex:none}
+.bb-actions button{min-height:36px;padding:0 4px;border-radius:6px;border:1px solid #c9d6e3;background:none;color:#f3f7fb;font-size:.72rem;font-weight:700;line-height:1.2}
+.bb-actions .bp-primary{border:2px solid var(--bp-cyan)}.bb-actions button:disabled{opacity:.4}
+/* ふきだしの「過去」：解決済みの羅列 */
+.bb-head .bb-past-btn{margin-left:auto;min-width:0;min-height:30px;padding:0 9px;border:1px solid #c9d6e3;border-radius:5px;font-size:.72rem}
+.bb-head .bb-past-btn+button{margin-left:0}
+.bb-head .bb-past-btn[aria-pressed=true]{border-color:var(--bp-cyan)}
+.bb-past h4{margin:2px 0 4px;font-size:.68rem;color:#a9b8c8;font-weight:400}
+.bb-past ul{margin:0;padding:0;list-style:none;display:grid;gap:4px}
+.bb-past li{display:grid;grid-template-columns:auto auto 1fr;gap:1px 6px;font-size:.74rem;color:#dfe9f3;align-items:baseline}
+.bb-past li time{color:#a9b8c8;font-variant-numeric:tabular-nums}.bb-past li b{font-size:.68rem;color:#cfe0ee;white-space:nowrap}
+.bb-past li span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bb-past li small{grid-column:3;font-size:.64rem;color:#a9b8c8}
+.bb-head{flex-wrap:nowrap;min-width:0}.bb-head b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:0 1 auto}.bb-head span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1 1 auto}.bb-head .bb-past-btn{white-space:nowrap;flex:none}.bb-head button{flex:none}
+/* ふきだし・一覧の表（日付｜設備・内容｜状態｜行動） */
+.bb-table{width:100%;border-collapse:collapse;margin:2px 0 6px;font-size:.74rem;color:#eef3f8;table-layout:fixed}
+.bb-table th{font-size:.62rem;font-weight:400;color:#a9b8c8;text-align:left;padding:2px 4px;border-bottom:1px solid var(--bp-line)}
+.bb-table td{padding:4px;border-bottom:1px solid #22384f;vertical-align:middle}
+.bb-table small{display:block;font-size:.62rem;color:#a9b8c8;line-height:1.3}
+.bb-table .bt-date{width:3.6em;font-variant-numeric:tabular-nums}
+.bb-table th:nth-child(1){width:3.6em}.bb-table:not(.att-table) th:nth-child(3){width:4.6em}.bb-table:not(.att-table) th:nth-child(4){width:6.4em}
+.bb-table .bt-what{overflow:hidden}.bb-table .bt-what b{font-size:.68rem;color:#cfe0ee;margin-right:2px}
+.bb-table .bt-stage{white-space:nowrap}.bb-table .bt-stage .bp-attn{width:9px;height:9px;margin-right:3px;vertical-align:-1px}
+.bb-table tr.st-新 .bt-stage{color:#fff;font-weight:700}.bb-table tr.st-確認済み,.bb-table tr.st-対応中{color:#c7d3df}
+.bb-table .bt-act button{width:100%;min-height:32px;padding:0 2px;border:1px solid #c9d6e3;border-radius:5px;background:none;color:#f3f7fb;font-size:.66rem;line-height:1.15}
+.bb-table tr.st-新 .bt-act button{border-color:var(--bp-cyan)}
+.board-screen .bb-table button:hover{background:none}
+.bb-past .bb-table th:nth-child(3){width:4.4em}
+/* 一覧の画面（ダイアログは濃い背景） */
+.bb-table{background:none!important;white-space:normal!important;width:100%!important;display:table!important;font-size:.74rem!important}
+.bb-table thead{display:table-header-group!important}.bb-table tbody{display:table-row-group!important}.bb-table tr{display:table-row!important}.bb-table th,.bb-table td{display:table-cell!important}
+.bb-table thead,.bb-table tr,.bb-table th,.bb-table td{background:none!important;box-shadow:none!important}
+.att-lists{margin:0 0 14px;color:#eef3f8}.att-lists h3{margin:10px 0 4px;font-size:.95rem;color:#fff}.att-lists h3 small{font-weight:400;color:#a9b8c8}
+.att-lists .bb-table td{color:#eef3f8}
+.att-table th:nth-child(2){width:3.6em}.att-table th:nth-child(3){width:5em}
+.att-door{min-height:32px;min-width:44px;padding:0 4px;border:1px solid #c9d6e3;border-radius:5px;background:none;color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
+.bb-table th:nth-child(1){width:3.8em}.bb-table:not(.att-table) th:nth-child(3){width:5.6em}.bb-table:not(.att-table) th:nth-child(4){width:5.6em}
+.att-table th:nth-child(2){width:4.4em}.att-table th:nth-child(3){width:5.8em}
+.bb-table .bt-act button{font-size:.62rem;padding:0 1px}
+.bb-table[hidden],.bb-two[hidden],.bb-past[hidden],.bb-actions[hidden]{display:none!important}
+/* 表をマス目に。設備・内容はアイコン（銀プレート＋種類の丸アイコン＋2文字）、対処は札 */
+.bb-table{border:1px solid #6d86a3!important}.bb-table th,.bb-table td{border:1px solid #3e5873!important}
+.bb-table thead th{background:#18324f!important;color:#dfe9f3!important;font-weight:700;text-align:center}
+.bb-table:not(.att-table) th:nth-child(3){width:5.2em}.bb-table:not(.att-table) th:nth-child(4){width:4.8em}
+.bt-open{display:block;width:100%;min-height:36px;padding:0;border:0;background:none!important;color:inherit;text-align:left}
+.eq-cell{display:inline-flex;align-items:center;gap:6px}
+.eq-cell .eq-plate{width:24px;height:24px;border-radius:5px}.eq-cell .eq-plate svg{width:18px;height:18px}
+.eq-unknown{display:inline-grid;place-items:center;background:none!important;box-shadow:inset 0 0 0 1.5px #8aa0b6!important;color:#a9b8c8;font-weight:700;font-size:.8rem}
+.cat-ic{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#18324f;box-shadow:inset 0 0 0 1px #46607c;color:#e9f0f7;flex:none}.cat-ic svg{width:16px;height:16px}
+.eq-cell small{display:inline!important;font-size:.72rem!important;color:#dfe9f3!important}
+.way-chip{display:inline-flex;align-items:center;justify-content:center;gap:2px;width:100%;min-height:30px;padding:0 2px;border-radius:5px;border:1px solid;font-size:.68rem;font-weight:700;background:none}
+.way-chip svg{width:13px;height:13px;flex:none}
+.w-現地{color:#ffe08a!important;border-color:#d9b25f!important;background:#2b2410!important}.w-遠隔{color:#7fe0ff!important;border-color:#2db4ff!important;background:#0f2c44!important}.w-外部{color:#e2c3ff!important;border-color:#a77be0!important;background:#24173a!important}.w-未定,.w-none{color:#a9b8c8!important;border:1px dashed #6d86a3!important;background:none!important}
+.w-none{color:#46e0f0!important;border:1px solid #46e0f0!important}
+.bb-actions2{grid-template-columns:1fr 1fr}
+/* 行の詳細（ダイアログ） */
+.item-detail .id-top{display:flex;gap:10px;align-items:flex-start}.item-detail .id-top p{margin:2px 0 0}
+.item-detail .cat-ic{background:#1d3b56;color:#fff}.item-detail .eq-cell small{color:inherit!important}
+.id-facts{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:8px 0;font-size:.82rem}.id-facts dt{opacity:.7}.id-facts dd{margin:0}
+.id-way{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;border:0;padding:0;margin:8px 0}.id-way legend{font-size:.82rem;margin-bottom:4px}
+.id-way .way-chip{min-height:44px;font-size:.82rem;cursor:pointer}.id-way input{position:absolute;opacity:0;pointer-events:none}
+.id-way .way-chip:has(input:checked){outline:3px solid #46e0f0;outline-offset:1px}
+#item-detail label{display:flex;flex-direction:column;gap:4px;margin:8px 0}.id-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.id-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.id-actions button{min-height:44px}
+.bb-table:not(.att-table) th:nth-child(1){width:3.3em}.bb-table:not(.att-table) th:nth-child(3){width:4.2em}.bb-table:not(.att-table) th:nth-child(4){width:4.6em}
+.bb-table .bt-stage{font-size:.64rem;white-space:normal;line-height:1.2;text-align:center}.bb-table .bt-stage .bp-attn{display:block;margin:0 auto 2px}
+.bb-table .way-chip{white-space:nowrap;font-size:.64rem;gap:1px}.bb-table .way-chip svg{width:11px;height:11px}
+.bb-table td.bt-act{padding:3px}
+.bb-table:not(.att-table) th:nth-child(1){width:3.6em}.bb-table .bt-date{white-space:nowrap;font-size:.7rem}.bb-table .bt-date small{white-space:nowrap}
+.bb-table:not(.att-table) th:nth-child(3){width:4.6em}
+/* マスの右側の小さな印 */
+.bt-open{display:flex!important;align-items:center;gap:6px}
+.eq-badges{margin-left:auto;display:inline-flex;flex-wrap:wrap;justify-content:flex-end;gap:3px}
+.eb{display:inline-flex;align-items:center;gap:1px;height:18px;padding:0 4px;border-radius:9px;background:#18324f;box-shadow:inset 0 0 0 1px #46607c;color:#dfe9f3;font-size:.6rem;font-weight:700;white-space:nowrap}
+.eb svg{width:11px;height:11px}
+.eb-due.is-late{background:#4a1416;box-shadow:inset 0 0 0 1px #ff6b6b;color:#ffb3b3}
+.eb-person{width:18px;padding:0;justify-content:center;border-radius:50%;background:#2b3f5a}
+.eb-recur{color:#ffe08a;box-shadow:inset 0 0 0 1px #d9b25f}
+.eb{padding:0 6px;font-size:.62rem;font-weight:700}
+.eb-late{background:#4a1416;box-shadow:inset 0 0 0 1px #ff6b6b;color:#ffb3b3}
+.bp-door .bp-attn{width:clamp(8px,34cqh,12px);height:clamp(8px,34cqh,12px)}

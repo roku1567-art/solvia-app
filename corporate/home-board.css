@@ -1,0 +1,113 @@
+/* 本部の予定：上の緑の枠の腕時計、絵の上の帯、屋上のパネルのカレンダー（今週から5週間）、車の下の黒板。位置は hq-screen.css の「札の位置」 */
+/* 本部では時刻だけの段をなくし、法人本部の緑の枠を一番上にする。≡ は緑の枠の右端に重ねる */
+body[data-page=home]{--shell-header:0px}
+body[data-page=home] header{min-height:env(safe-area-inset-top)!important;height:env(safe-area-inset-top)!important;padding:0!important;border:0!important;overflow:visible}
+body[data-page=home] #jst-clock{display:none!important}
+body[data-page=home] #settings-button{position:fixed;z-index:40;top:calc(env(safe-area-inset-top) + 7px);right:max(6px,env(safe-area-inset-right));min-height:44px!important;min-width:44px!important}
+.hq-live>.solvia-title{min-height:58px!important;padding:0 52px 0 10px!important;gap:6px!important;overflow:hidden;position:relative}
+.hq-live>.solvia-title:has(.hq-watch.is-big){overflow:visible;z-index:30}
+.hq-live>.solvia-title>b{font-size:1.15rem!important}
+.hq-live>.solvia-title .hq-mode{white-space:nowrap;padding:0 6px!important;max-width:none!important}
+.hq-live>.solvia-title .weather-chip{flex:0 1 auto;min-width:0}
+/* 腕時計 */
+.hq-live .hq-watch{position:relative;flex:0 0 auto;width:52px!important;height:58px!important;min-height:0!important;max-width:none!important;margin:0 2px;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;filter:drop-shadow(0 2px 2px #000a);transform-origin:50% 0;transition:transform .25s ease;cursor:pointer}
+.hq-watch svg{position:absolute;left:0;top:-6px;width:52px;height:69px;display:block;overflow:visible}
+.hq-watch .w-strap{fill:#141414}
+.hq-watch .w-gear polygon{fill:none;stroke:#c9a046;stroke-width:1.2;opacity:.75}.hq-watch .w-gear circle{fill:#c9a046;opacity:.75}
+.hq-watch .w-marks text{font:700 9px serif;text-anchor:middle;fill:#e8c66a}.hq-watch .w-marks circle{fill:#e8c66a}
+.hq-watch .w-sec{transform-origin:50px 50px;transition:transform .2s}.hq-watch .w-sec line{stroke:#e8c66a;stroke-width:1.2;stroke-linecap:round}.hq-watch .w-sec circle,.hq-watch .w-pin{fill:#e8c66a}
+.hq-live .hq-watch .w-win{position:absolute!important;left:12.5px!important;right:12.5px!important;top:22px!important;height:13px!important;min-height:0!important;max-width:none!important;margin:0!important;padding:0!important;display:flex!important;align-items:center;justify-content:center;border-radius:2px;background:linear-gradient(#141418,#060608)!important;box-shadow:0 0 0 1px #c9a04688;font-size:inherit!important;line-height:1}
+.hq-watch .w-win b{font:800 .66rem/1 'Courier New',ui-monospace,monospace;color:#fff3d6;white-space:nowrap}
+.hq-live .hq-watch .w-date{display:none!important}
+/* 押すと大きく */
+.hq-live .hq-watch.is-big{z-index:50;transform:translateY(4px) scale(2.6)}
+.hq-live .hq-watch.is-big .w-date{display:block!important;position:absolute!important;left:50%!important;top:64px!important;transform:translateX(-50%) scale(.42);transform-origin:50% 0;min-height:0!important;max-width:none!important;padding:3px 8px!important;border-radius:4px;background:#0b2a36ee!important;color:#fff3d6;font-size:.8rem!important;font-weight:700;white-space:nowrap;box-shadow:0 0 0 1px #c9a046}
+@keyframes hqw-gear{to{transform:rotate(360deg)}}
+.hq-watch .w-gear{animation:hqw-gear 30s linear infinite}.hq-watch .w-gear:nth-of-type(2n){animation-direction:reverse;animation-duration:22s}
+body.motion-off .hq-watch,body.motion-off .hq-watch *{animation:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){.hq-watch,.hq-watch *{animation:none!important;transition:none!important}}
+/* 絵の上の帯：日付｜色の見方（2段）｜右下に次まで */
+.hq-strip{display:grid;grid-template-columns:auto 1fr auto;grid-template-rows:auto auto;align-items:center;column-gap:10px;margin:0;padding:4px 8px 4px 8.5%;min-height:46px;background:#0b2a36;border-bottom:1px solid #2e5a63;color:#e7f4ee;white-space:nowrap;flex:none}
+.hq-strip button{min-height:0;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left}
+.hq-strip .hq-date{grid-row:1/3;min-height:38px;font-size:.86rem;font-weight:700}
+.hq-legend{grid-row:1/3;display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:3px 8px;font-size:.68rem;font-weight:600}
+.hq-legend .sw-l{display:inline-flex;align-items:center;gap:3px}
+.hq-legend .sw{display:inline-block;width:9px;height:9px;border-radius:2px}.sw.td{background:#fff}.sw.ev{background:#ffd75e}.sw.cm{background:#3f78d8}.sw.ps{background:#3a4a5e;box-shadow:inset 0 0 0 1px #6d7f93}.sw.nx{background:#2aa58f}
+.hq-strip .hq-gap{grid-column:3;grid-row:2;justify-self:end;min-height:24px;font-size:.7rem}
+.hq-strip .hq-gap b{color:#ffd75e;font-size:.95rem;margin:0 1px}
+@media(max-width:380px){.hq-strip{column-gap:7px;padding-left:7%}.hq-strip .hq-date{font-size:.8rem}.hq-legend{gap:3px 6px;font-size:.64rem}.hq-strip .hq-gap{font-size:.66rem}}
+/* 屋上のパネル */
+.hq-live .hq-roofcal{position:absolute;z-index:2;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:repeat(5,minmax(0,1fr));gap:1px;padding:2px;border:1.5px solid #7b8790;border-radius:0;background:#c9d2d8;box-shadow:2px 3px 0 #2b3a2b88;min-height:0}
+.hq-roofcal .pv{position:relative;display:grid;place-items:center;min-width:0;min-height:0;background:linear-gradient(135deg,#3f78d8,#1d4fae 55%,#163f8f);border:1px solid #0e2d66;box-shadow:inset 0 0 0 1px #8fb4ff55;color:#0e2d66;font-size:8px;font-weight:900;line-height:1}
+.hq-roofcal .pv::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 48%,#8fb4ff44 50%,transparent 52%),linear-gradient(transparent 48%,#8fb4ff44 50%,transparent 52%)}
+.hq-roofcal .pv.nx{background:linear-gradient(135deg,#3fb7a0,#1f8c79 55%,#17705f);border-color:#0d4c40}
+.hq-roofcal .pv.ev{background:radial-gradient(circle,#fff6c4,#ffd75e 45%,#f2b51e);border-color:#8a5a00;box-shadow:0 0 5px #ffd75ecc}
+.hq-roofcal .pv.today{background:radial-gradient(circle,#fff,#e8f4ff 60%,#bcd8ff);border-color:#fff;box-shadow:0 0 6px #fff;z-index:1}
+.hq-roofcal .pv.today.ev{background:#ffc928;color:#3a2600;box-shadow:0 0 0 1.5px #fff,0 0 7px #fff}
+.hq-roofcal .pv.past{filter:brightness(.72) saturate(.55)}
+/* 黒板（立て看板） */
+.hq-live .hq-chalk{position:absolute;z-index:3}
+.hq-chalk .frame{position:absolute;inset:0 6% 10% 6%;display:flex;flex-direction:column;justify-content:space-around;padding:2px 6px;border:3px solid #8a5a2b;border-radius:3px;background:linear-gradient(160deg,#2a5545,#173a31);box-shadow:inset 0 0 0 1px #c08a52,2px 3px 0 #0006;color:#f3f1e4;font-family:"Hiragino Maru Gothic ProN","Rounded Mplus 1c","Yu Gothic",sans-serif}
+.hq-live .hq-chalk button{display:flex!important;align-items:baseline;width:100%;min-height:0!important;min-width:0!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;color:#f3f1e4!important;font-family:inherit;text-align:left;filter:none!important}
+.hq-live .hq-chalk .ttl{border-bottom:1px solid #f3f1e499!important}.hq-live .hq-chalk .nx-line{display:block!important;border-top:1px dotted #f3f1e455!important;color:#f3f1e4cc!important}
+.hq-live .hq-roofcal{color:inherit;filter:none!important}
+.hq-chalk .ttl{font-size:.82rem;font-weight:800;letter-spacing:.2em;border-bottom:1px solid #f3f1e499}
+.hq-chalk .row{font-size:.8rem;line-height:1.2}.hq-chalk .row span{flex:1;letter-spacing:.1em}.hq-chalk .row b{font-size:1.15rem;color:#ffe9a8}.hq-chalk .row small{font-size:.6rem;margin-left:2px}
+.hq-chalk .leg{position:absolute;bottom:0;width:4px;height:12%;background:#6b4220}.hq-chalk .leg.l{left:16%}.hq-chalk .leg.r{right:16%}
+.hq-roofcal:focus-visible,.hq-chalk button:focus-visible,.hq-gap:focus-visible{outline:2px solid #ffe9a8;outline-offset:1px}
+/* 本部の札用の古い指定（.miniature button>span）を、黒板とパネルでは打ち消す */
+.hq-live .hq-chalk button>span{display:inline!important;flex:1;padding:0!important;border:0!important;border-radius:0!important;background:none!important;font-size:inherit!important;white-space:nowrap}
+.hq-live .hq-roofcal>span.pv{display:grid!important;padding:0!important;border-radius:0!important;font-size:8px!important;white-space:nowrap}
+.hq-live .hq-roofcal>span.pv:not(.ev):not(.today):not(.nx){background:linear-gradient(135deg,#3f78d8,#1d4fae 55%,#163f8f)!important;border:1px solid #0e2d66!important}
+.hq-live .hq-roofcal>span.pv.nx:not(.ev):not(.today){background:linear-gradient(135deg,#3fb7a0,#1f8c79 55%,#17705f)!important;border:1px solid #0d4c40!important}
+.hq-live .hq-roofcal>span.pv.ev:not(.today){background:radial-gradient(circle,#fff6c4,#ffd75e 45%,#f2b51e)!important;border:1px solid #8a5a00!important}
+.hq-live .hq-roofcal>span.pv.today{background:radial-gradient(circle,#fff,#e8f4ff 60%,#bcd8ff)!important;border:1px solid #fff!important}
+.hq-live .hq-roofcal>span.pv.today.ev{background:#ffc928!important}
+.hq-live .hq-roofcal>span.pv.today.ev{box-shadow:0 0 0 1.5px #fff,0 0 7px #fff!important;color:#3a2600}
+/* 本部の札用の古い指定（.solvia-title span・ボタンの文字の大きさ）を打ち消す */
+.hq-live>.solvia-title>b{font-size:1.2rem!important}
+.hq-live>.solvia-title .hq-mode{font-size:.72rem!important;min-height:28px!important}
+.hq-live>.solvia-title .weather-chip b{font-size:.8rem!important}
+.hq-live .hq-strip .hq-date{font-size:.9rem!important}
+.hq-live .hq-legend,.hq-live .hq-legend .sw-l{font-size:.72rem!important;max-width:none!important;min-height:0!important;padding:0!important}
+.hq-live .hq-strip .hq-gap{font-size:.74rem!important}
+.hq-live .hq-strip .hq-gap b{font-size:1rem!important}
+@media(max-width:380px){.hq-live .hq-legend,.hq-live .hq-legend .sw-l{font-size:.66rem!important}.hq-live .hq-strip .hq-date{font-size:.82rem!important}.hq-live .hq-strip .hq-gap{font-size:.68rem!important}}
+/* 腕時計は緑の枠のちょうど真ん中（データ領域の札があってもなくても同じ位置）。とても狭い画面では並びの中に戻す */
+.hq-live>.solvia-title>.hq-watch{position:absolute!important;left:50%;top:0;margin:0!important;transform:translateX(-50%);transform-origin:50% 0}
+.hq-live>.solvia-title>.hq-watch.is-big{transform:translateX(-50%) translateY(4px) scale(2.6)}
+@media(max-width:359px){.hq-live>.solvia-title>.hq-watch{position:relative!important;left:auto;transform:none}.hq-live>.solvia-title>.hq-watch.is-big{transform:translateY(4px) scale(2.6)}}
+/* 真ん中の時計と重ならないよう、左の「法人本部［独立デモ］」を少し詰める */
+.hq-live>.solvia-title{padding-left:8px!important;gap:5px!important}
+@media(max-width:420px){.hq-live>.solvia-title>b{font-size:1.06rem!important}.hq-live>.solvia-title .hq-mode{font-size:.64rem!important;padding:0 4px!important;min-height:26px!important}}
+.hq-live>.solvia-title .weather-chip{max-width:calc(50% - 34px)!important;overflow:hidden}.hq-live>.solvia-title .weather-chip b{display:block;overflow:hidden;text-overflow:ellipsis}
+/* ≡ は本部では緑の枠の中に入れる（画面を動かしても枠と一緒に動く） */
+body[data-page=home] .hq-live>.solvia-title>#settings-button{position:absolute!important;top:50%!important;right:4px!important;transform:translateY(-50%);z-index:5}
+/* 要対応：件数があれば目立たせる。0件は落ち着いた色、未取得は灰（正常に見せない） */
+.hq-live .summary-counts .hq-alert.is-on{background:linear-gradient(180deg,#7a1f1a,#5a1512)!important;border:1px solid #ff8a7a!important;color:#ffe3de!important;box-shadow:inset 0 0 0 1px #ff8a7a,0 0 10px #ff5a4a66}
+.hq-live .summary-counts .hq-alert.is-on b{color:#fff!important}
+.hq-live .summary-counts .hq-alert.is-on svg,.hq-live .summary-counts .hq-alert.is-on img{opacity:1;filter:drop-shadow(0 0 2px #ffd23c)}
+@keyframes hq-alert-blink{50%{box-shadow:inset 0 0 0 1px #ff8a7a,0 0 16px #ff5a4aaa}}
+.hq-live .summary-counts .hq-alert.is-on{animation:hq-alert-blink 2.4s ease-in-out infinite}
+body.motion-off .hq-live .summary-counts .hq-alert{animation:none!important}
+.hq-live .summary-counts .hq-alert.is-unknown{background:#2b3440!important;border:1px dashed #9aa6b0!important;color:#cfd6dc!important}
+/* 立上げ準備を下に移したので、中身（メーター）が枠からはみ出さないようにし、低い画面では次の予定の行を少し詰める */
+.hq-live .hq-summary>.progress-summary{height:auto!important;flex:none}
+@media(max-height:740px){.hq-live .hq-summary>.next-events{padding:2px 5px!important}.hq-live .hq-summary>.next-events>button{min-height:32px!important}.hq-live .hq-summary>.progress-summary .segmented-progress{height:10px!important}}
+/* 本部の下：点検の計画の枠（ゲームの窓風）と、立上げ準備の円グラフ・従事者 */
+.hq-live .summary-counts .hq-plan{display:flex!important;flex-direction:column;align-items:flex-start!important;justify-content:center;gap:1px;padding:4px 8px!important;background:linear-gradient(180deg,#14306a,#0b1f5a)!important;border:2px solid #fff!important;border-radius:6px;box-shadow:inset 0 0 0 1px #000,0 0 0 1px #000;color:#fff!important;font-family:"Hiragino Maru Gothic ProN","Rounded Mplus 1c",sans-serif}
+.hq-live .summary-counts .hq-plan>span{font-size:.68rem!important;color:#f3e2b4;letter-spacing:.06em;white-space:nowrap}
+.hq-live .summary-counts .hq-plan>b{grid-column:auto!important;font-size:1.02rem!important;color:#fff!important}
+.hq-live .summary-counts .hq-plan>small{font-size:.6rem;color:#ffd75e;white-space:nowrap}
+.hq-row3{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px}
+.hq-row3>button{display:flex;align-items:center;gap:8px;min-height:52px;padding:4px 10px 4px 6px;border:1px solid #6fae9c;border-radius:6px;background:#0d3236;color:#f0f8f4;text-align:left}
+.hq-donut svg{width:44px;height:44px;flex:none}.hq-donut .dn-bg{fill:none;stroke:#0a2629;stroke-width:8}.hq-donut .dn-fg{fill:none;stroke:#8ff1c6;stroke-width:8}
+.hq-donut span,.hq-crew .cr-n{display:flex;flex-direction:column;line-height:1.15;max-width:none!important;padding:0!important;min-height:0!important}
+.hq-row3 small{font-size:.7rem;color:#cfe3dc}.hq-donut b{font-size:1.15rem;color:#8ff1c6}.hq-crew .cr-n b{font-size:1.05rem;color:#f3faf6}
+.hq-crew .cr-list{display:flex;gap:6px;overflow:hidden;max-width:none!important;padding:0!important;min-height:0!important}
+.cr-tk{display:flex;flex-direction:column;align-items:center;gap:1px;max-width:none!important;padding:0!important;min-height:0!important}.cr-tk small{font-size:.58rem!important;white-space:nowrap}
+.cr-hd{display:block;width:22px;height:22px;border-radius:50% 50% 40% 40%;background:#fff;box-shadow:inset 0 -7px 0 #1d3550;border:1px solid #9fb9b2}
+.cr-more{align-self:center;font-size:.72rem;color:#cfe3dc}
+.hq-attn{flex-direction:column;align-items:flex-start!important}
+@media(max-height:740px){.hq-row3>button{min-height:44px;padding-top:2px;padding-bottom:2px}.hq-donut svg{width:36px;height:36px}}
+.hq-mode.is-old{border-color:#ffd75e!important;color:#ffd75e!important;display:inline-flex;flex-direction:column;line-height:1.1}.hq-mode.is-old i{font-style:normal;font-size:.5rem}

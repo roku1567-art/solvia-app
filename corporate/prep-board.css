@@ -1,0 +1,91 @@
+/* 立上げ準備のすごろく（ゲーム風の窓・芝生の盤・五重の塔） */
+body[data-page=tasks] #page,body[data-page=prep-tree] #page{background:#081428}
+.sg{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.sg-head{display:flex;gap:10px;align-items:center}
+.pg-tower{width:52px;height:96px;flex:none;image-rendering:pixelated}
+.sg-sum{flex:1;min-width:0}.sg-sum p{margin:2px 0;display:flex;align-items:baseline;gap:6px;font-size:.74rem;color:#b9c6e8}.sg-sum p b{font-size:1.45rem;color:#ffd75e}
+.sg-floor b{font-size:1rem!important;color:#ff8a7a!important}
+.sg-lg{flex-wrap:wrap;gap:3px 8px!important;font-size:.6rem!important}.sg-lg i{display:inline-block;width:9px;height:9px;border:1px solid #000;margin-right:-4px}.sg-lg .d{background:#7be0a8}.sg-lg .p{background:#ffd75e}.sg-lg .n{background:#c9c2a8}.sg-lg .h{background:#9aa6b0}
+.sg-board{display:flex;flex-direction:column;gap:4px;padding:6px;border:3px solid #fff;border-radius:6px;box-shadow:inset 0 0 0 2px #000,0 0 0 2px #000;background:#2c6b3a;background-image:radial-gradient(#3d8a4a 1px,transparent 1px);background-size:6px 6px}
+.sg-row{display:grid;grid-template-columns:34px 1fr;gap:4px;align-items:stretch}
+.sg-stage{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border:2px solid #000;border-radius:3px;background:#0b1f5a;color:#fff;font-family:"Hiragino Maru Gothic ProN",sans-serif}
+.sg-stage b{font-size:.9rem;line-height:1}.sg-stage small{font-size:.44rem;writing-mode:vertical-rl;letter-spacing:.05em;color:#b9c6e8}.sg-stage em{font-style:normal;font-size:.44rem;color:#ffd75e}
+.sg-row.is-clear .sg-stage{background:linear-gradient(180deg,#ffd75e,#c49a1e);color:#2a1a00;box-shadow:0 0 8px #ffd75e}.sg-row.is-clear .sg-stage small{color:#3a2600}
+.sg-cells{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.sq{position:relative;aspect-ratio:1;min-height:0;padding:0;border:2px solid #000;border-radius:3px;background:#c9c2a8;color:#2a2416;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset -2px -2px 0 #8e8670,inset 2px 2px 0 #f1ead0;font-family:"Hiragino Maru Gothic ProN",sans-serif}
+.sq b{font-size:1.05rem;line-height:1}.sq small{font-size:.46rem;margin-top:2px;white-space:nowrap;overflow:hidden;max-width:100%}.sq .no{position:absolute;left:2px;top:1px;font-size:.5rem;opacity:.7}
+.sq-done{background:#7be0a8;box-shadow:inset -2px -2px 0 #3c9a6a,inset 2px 2px 0 #c8ffe0}.sq-doing{background:#ffd75e;box-shadow:inset -2px -2px 0 #c49a1e,inset 2px 2px 0 #fff3c4}.sq-hold{background:#9aa6b0}.sq-skip{opacity:.35}
+.sq-pad{visibility:hidden}
+.sq.is-hero{outline:3px solid #fff;outline-offset:1px}
+.sq .hero{position:absolute;right:-4px;top:-10px;width:15px;height:21px;background:radial-gradient(circle at 50% 30%,#fff 0 5px,transparent 5.5px),linear-gradient(transparent 9px,#1674ac 9px);border:2px solid #000;border-radius:8px 8px 3px 3px}
+.sq .flag{position:absolute;right:0;top:-6px;font-style:normal;font-size:.8rem}
+.sq .left{position:absolute;bottom:1px;right:1px;font-style:normal;font-size:.42rem;padding:0 2px;background:#fff;border:1px solid #000;color:#b3261e}
+.sq .late{position:absolute;top:1px;right:2px;font-style:normal;font-weight:900;color:#d02a1e;font-size:.8rem}
+.sg-next .gc{flex-wrap:wrap}.sg-next .gc b{font-size:.84rem}.sg-next em{font-style:normal;font-size:.62rem;padding:0 6px;border:1px solid #ffd75e;border-radius:8px;color:#ffd75e}.sg-next em.late{border-color:#ff8a7a;color:#ff8a7a}.sg-next small{margin-left:auto;font-size:.64rem;color:#b9c6e8}
+.sg-note{margin:0;font-size:.64rem;color:#b9c6e8}
+/* 区分ごとの管理表（ツリー） */
+.pt-cats{padding:0 10px 10px}.pt-cat{margin:6px 0}.pt-cat-h{margin:4px 0;font-size:.86rem;font-weight:800;color:#9ed7c4}.pt-cat-h small{margin-left:8px;font-weight:400;color:#cfe3dc}
+.pt .tree-leaves{margin-left:6px}
+.pt-no{flex:none;width:2em;font-size:.72rem;color:#6a7f86}.pt-main{flex:1;min-width:0;display:flex;flex-direction:column}.pt-main small{font-size:.66rem;opacity:.75}
+.pt-st{flex:none;font-size:.62rem;padding:1px 6px;border-radius:8px;border:1px solid #9aa6b0;color:#4a5560}.st-完了{border-color:#3c9a6a;color:#1f6b45;background:#dcf5e8}.st-進行中{border-color:#c49a1e;color:#7a5a00;background:#fff3c4}.st-保留{background:#eceff2}.st-skip{opacity:.5}
+/* 押せるボタンの共通の色（選択・押下）に負けないように */
+.sg .sq,.sg .sq:hover,.sg .sq:focus{background:#c9c2a8!important;color:#2a2416!important}
+.sg .sq-done,.sg .sq-done:hover,.sg .sq-done:focus{background:#7be0a8!important}
+.sg .sq-doing,.sg .sq-doing:hover,.sg .sq-doing:focus{background:#ffd75e!important}
+.sg .sq-hold,.sg .sq-hold:hover{background:#9aa6b0!important}
+.sg .sq:focus-visible{outline:3px dashed #fff}
+/* 人材・体制のメンバー表 */
+body[data-page=people] #page{background:#081428}
+.rs{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.rs-sum{display:flex;flex-wrap:wrap;gap:4px 14px;margin:6px 0 0;font-size:.74rem;color:#b9c6e8}.rs-sum b{font-size:1.1rem;color:#ffd75e}.rs-sum b.warn{color:#ff9b8a}
+.rs-list{display:flex;flex-direction:column;gap:2px;padding:4px 6px}
+.rs-card{display:flex;align-items:center;gap:10px;width:100%;min-height:76px;padding:6px 4px;border:0;border-bottom:1px dashed #33507e;background:none!important;color:#fff;font:inherit;text-align:left}
+.rs-card:last-child{border-bottom:0}
+.rs-face{position:relative;flex:none;width:40px;height:44px;border:2px solid #fff;border-radius:4px;background:#2b4a7a;box-shadow:2px 2px 0 #000;overflow:hidden}
+.rs-face i{position:absolute;left:7px;top:5px;width:22px;height:16px;border-radius:11px 11px 3px 3px;background:#fff;box-shadow:0 13px 0 -3px #f1c79b,0 22px 0 0 #1674ac}
+.rs-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.rs-top{display:flex;align-items:baseline;gap:8px}.rs-top b{font-size:1rem}.rs-top small{font-size:.66rem;color:#ffd75e}
+.rs-line{display:flex;flex-wrap:wrap;gap:2px 10px;font-size:.66rem;color:#b9c6e8}.rs-line b{color:#fff;font-weight:700}
+.rs-bar{display:flex;align-items:center;gap:6px;font-size:.62rem;color:#b9c6e8}.rs-gauge{flex:1;height:8px;border:2px solid #fff;background:#061238}.rs-gauge i{display:block;height:100%;background:#7be0a8}.rs-gauge.over i{background:#ff8a7a}.rs-bar-v{color:#fff;font-variant-numeric:tabular-nums}
+.rs-badges{display:flex;flex-wrap:wrap;gap:4px}.rs-b{font-size:.58rem;padding:0 5px;border:1px solid #6d7f93;border-radius:8px;color:#9aa6b0}.rs-b.on{border-color:#7be0a8;color:#7be0a8}
+.rs-go{font-style:normal;color:#b9c6e8}
+/* 人の窓（選手カード）と、人の編集をゲーム風の窓に */
+#dialog.gm-dlg{background:#081428;color:#fff;border:3px solid #fff}
+#dialog.gm-dlg .modal-top{background:#0b1f5a;border-bottom:3px solid #fff}
+#dialog.gm-dlg .modal-body{color:#fff}
+.pc-head{display:flex;gap:12px;align-items:center}.pc-head .rs-face{width:52px;height:58px}.pc-head .rs-face i{left:12px;top:8px;width:26px;height:19px;box-shadow:0 15px 0 -3px #f1c79b,0 26px 0 0 #1674ac}
+.pc-name{display:block;font-size:1.2rem}.pc-role{display:block;font-size:.72rem;color:#ffd75e;margin-bottom:4px}
+.pc-stats{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:0}.pc-stats div{display:flex;justify-content:space-between;gap:6px;border-bottom:1px dotted #33507e;padding:3px 0}.pc-stats dt{font-size:.68rem;color:#b9c6e8}.pc-stats dd{margin:0;font-size:.78rem;font-weight:700;text-align:right}
+.pc-bar{margin-top:8px}.pc-bar small{font-size:.58rem;color:#b9c6e8}
+.pc-site{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center;border-bottom:1px dashed #33507e}.pc-site .td-btn{min-height:36px;padding:0 10px;font-size:.74rem}
+.pc-dep{background:linear-gradient(180deg,#9aa6b0,#5f6b77)!important;color:#fff!important}
+.pc-visit{margin:2px 0;font-size:.74rem}.pc-visit em{font-style:normal;color:#7be0a8}
+.pc-all summary{cursor:pointer;min-height:36px;display:flex;align-items:center;font-size:.84rem}.pc-all .pc-stats{margin-top:6px}
+/* 編集（人） */
+#dialog.gm-dlg #entity-form .small-note{color:#b9c6e8}
+#dialog.gm-dlg #entity-form .form-field,#dialog.gm-dlg #entity-form label{color:#dfe9f3}
+#dialog.gm-dlg #entity-form input,#dialog.gm-dlg #entity-form select,#dialog.gm-dlg #entity-form textarea{border:2px solid #fff;border-radius:4px;background:#061238;color:#fff}
+#dialog.gm-dlg #entity-form .proof-block{border:2px solid #fff;border-radius:6px;background:#0b1f5a;color:#fff}
+#dialog.gm-dlg #entity-form .form-footer{background:#081428;border-top:3px solid #fff}
+#dialog.gm-dlg #entity-form .form-footer .primary{background:none;border:2px solid #ffd75e;color:#ffd75e;font-weight:800}
+/* 立上げ準備・人材・管理表：上の帯（時刻・SOLVIA・題名の段）を出さず、ゲームの窓の題名と×だけにする */
+body:is([data-page=tasks],[data-page=people],[data-page=prep-tree]){--shell-header:0px;--shell-title:0px}
+body:is([data-page=tasks],[data-page=people],[data-page=prep-tree]) header{height:auto!important;min-height:env(safe-area-inset-top)!important;padding:env(safe-area-inset-top) 0 0!important;border:0!important;background:#081428}
+body:is([data-page=tasks],[data-page=people],[data-page=prep-tree]) header>*{display:none!important}
+body:is([data-page=tasks],[data-page=people],[data-page=prep-tree]) .topline{display:none!important}
+body:is([data-page=tasks],[data-page=people],[data-page=prep-tree]) #page{padding-top:8px!important}
+.sg-sum .gt,.rs-head .gt{display:flex;align-items:center}.sg-sum .gt small,.rs-head .gt small{margin-left:auto}
+/* ほかの画面もゲーム風：上の帯を出さず、題名の窓から始める。中の枠も紺と白い縁に */
+body.gm-page{--shell-header:0px;--shell-title:0px}
+body.gm-page header{height:auto!important;min-height:env(safe-area-inset-top)!important;padding:env(safe-area-inset-top) 0 0!important;border:0!important;background:#081428}
+body.gm-page header>*{display:none!important}
+body.gm-page .topline{display:none!important}
+body.gm-page #page{background:#081428!important;padding-top:8px!important}
+.gm-pagehead{margin-bottom:8px}.gm-pagehead .gt{display:flex;align-items:center}.gm-pagehead .gt small{margin-left:auto}
+body.gm-page #page .panel,body.gm-page #page .card,body.gm-page #page .entity-card{border:3px solid #fff!important;border-radius:6px!important;box-shadow:inset 0 0 0 2px #000,0 0 0 2px #000!important;background:#0b1f5a!important;color:#fff}
+body.gm-page #page .panel h2,body.gm-page #page .panel h3{color:#fff}
+body.gm-page #page .small-note{color:#b9c6e8}
+.gm-mode{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:1px;font-size:.56rem;color:#b9c6e8}
+.gm-mode select{min-height:32px;padding:0 6px;border:2px solid #ffd75e;border-radius:4px;background:#061238;color:#ffd75e;font:inherit;font-size:.78rem;font-weight:700}
+.gm-pagehead .gt .gm-mode+.gclose{margin-left:8px}
+.calendar-head .gclose{margin-left:auto;align-self:center}

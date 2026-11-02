@@ -1,0 +1,3 @@
+export function shiftMonth(month,offset){const [y,m]=month.split('-').map(Number),date=new Date(Date.UTC(y,m-1+offset,1));return date.toISOString().slice(0,7);}
+export function monthDays(month){const [year,m]=month.split('-').map(Number),first=new Date(Date.UTC(year,m-1,1)),last=new Date(Date.UTC(year,m,0)),size=Math.ceil((first.getUTCDay()+last.getUTCDate())/7)*7;return Array.from({length:size},(_,i)=>{const date=new Date(Date.UTC(year,m-1,1-first.getUTCDay()+i)),day=date.toISOString().slice(0,10);return {day,number:date.getUTCDate(),inMonth:day.startsWith(month),weekday:date.getUTCDay()};});}
+export function scheduledOn(sites,day){return sites.filter(s=>s.due===day);}

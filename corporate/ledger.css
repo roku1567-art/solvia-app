@@ -1,0 +1,19 @@
+/* 台帳まわり（担当者ごとの点数・型からまとめて追加） */
+.points-panel{background:#0f2238!important;border:1px solid #46607c!important;color:#eef3f8!important}
+.points-panel h3{color:#fff!important;margin:0 0 4px;font-size:1rem}
+.points-panel .small-note{color:#a9b8c8!important}
+.points-panel .table-wrap{overflow-x:auto;background:none!important;border:0!important}
+.points-panel table{width:100%;min-width:0;border-collapse:collapse;table-layout:fixed;font-size:.8rem;background:none!important}
+.points-panel th,.points-panel td{padding:6px 5px!important;border-bottom:1px solid #33506e!important;text-align:left;vertical-align:top;color:#eef3f8!important;background:none!important;white-space:normal!important;overflow-wrap:anywhere}
+.points-panel thead th{font-size:.68rem;color:#dfe9f3!important;background:#18324f!important}
+.points-panel thead th:nth-child(1){width:26%}.points-panel thead th:nth-child(2){width:22%}.points-panel thead th:nth-child(4){width:24%}
+.points-panel tbody th{font-weight:700}
+.points-panel td b{font-size:1rem;color:#fff}
+.points-panel small{display:block;font-size:.66rem;color:#a9b8c8!important;line-height:1.35}
+.points-panel small.amber{color:#ffd23c!important}
+.points-panel tbody tr:last-child th,.points-panel tbody tr:last-child td{border-bottom:0!important;background:#13283f!important}
+#site-bulk .proof-block label{display:flex;align-items:center;gap:8px}
+#site-bulk .proof-block label.form-field{flex-direction:column;align-items:stretch}
+/* 共通カレンダー：紺の地で見出しが沈まないように */
+body[data-page=calendar] .calendar-head h2,body[data-page=calendar] #page .panel>h2,body[data-page=calendar] #page .panel>h3{color:#eef3f8!important}
+.prep-sg{display:flex;gap:10px;align-items:flex-start;margin:8px 0;padding:8px;border:1px solid #c3cfd6;border-radius:6px}.prep-sg input{width:22px;height:22px;flex:none;margin-top:2px}.prep-sg span{display:flex;flex-direction:column;gap:2px}.prep-sg small{font-size:.74rem;opacity:.8}

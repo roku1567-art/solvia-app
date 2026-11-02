@@ -1,0 +1,85 @@
+/* 本部：公開中の画面に合わせた配置（絵の上の札・立上げ準備・3つの枠・次の予定）。本部だけに適用する。 */
+body[data-page=home]{--shell-header:28px;--shell-title:0px}
+body[data-page=home] header{height:auto!important;min-height:calc(28px + env(safe-area-inset-top))!important;padding:env(safe-area-inset-top) 10px 0!important;display:flex;align-items:center;gap:0;border-bottom:1px solid #8bd5be;background:#082d3a}
+body[data-page=home] header>:not(#jst-clock):not(#settings-button){display:none!important}
+/* 設定・バックアップ等への入口（≡）は機能を減らさないため残す */
+body[data-page=home] #settings-button{margin-left:auto;min-height:28px;min-width:44px;padding:0;border:0;background:none}
+body[data-page=home] #jst-clock{position:static;min-height:27px;padding:0;border:0;font-size:13px;text-align:left;line-height:1.3;background:transparent;white-space:nowrap}
+.hq-live>.solvia-title{display:flex;align-items:center;gap:8px;min-height:40px!important;background:linear-gradient(110deg,#075747,#064a43);border-bottom:1px solid #a4d8c8}
+.hq-live>.solvia-title>b{font-size:1.25rem;white-space:nowrap}
+.hq-live>.solvia-title .weather-chip{margin-left:auto;min-height:32px;width:auto;border:0;background:none;padding:0 2px;color:#e7f4ee}
+.hq-live>.solvia-title .weather-chip>span{display:none}.hq-live>.solvia-title .weather-chip b{font-size:.8rem;color:#e7f4ee;white-space:nowrap}
+.hq-mode{min-height:28px;padding:0 8px;border:1px solid #9fd8c5;border-radius:5px;background:#0d3f3a;color:#e9f7f1;font-size:.72rem}
+/* 絵の縦横比は scene-art.js の幅・高さから（低い画面では上下を少しだけ切る） */
+.hq-live>.miniature{aspect-ratio:var(--hq-art-w,1344)/var(--hq-art-h,1168)!important}
+@media(max-height:740px){.hq-live>.miniature{aspect-ratio:var(--hq-art-w,1344)/calc(var(--hq-art-h,1168)*.959)!important}}
+@media(max-height:600px){.hq-live>.miniature{aspect-ratio:var(--hq-art-w,1344)/calc(var(--hq-art-h,1168)*.959)!important}}
+/* 札：濃い緑の小さな板。押せる範囲は札より広くとる */
+.hq-live .miniature-canvas .scene-tag{position:static!important;display:inline-flex;align-items:center;gap:2px;padding:3px 8px;border:1px solid #9ed7c4;border-radius:5px;background:#0b3f3ae8;color:#f2fbf6;font-size:.74rem;font-weight:700;line-height:1.25;white-space:nowrap;box-shadow:0 1px 0 #0007}
+.hq-live .miniature-canvas .scene-tag b{color:#8ff1c6;font-size:.86rem}
+.hq-live .world-prep .scene-tag b{color:#ffe08a;font-size:.74rem}
+.hq-live .hq-tag{position:absolute;z-index:3;display:flex;align-items:center;min-height:44px;min-width:44px;padding:0;border:0;background:none!important;box-shadow:none!important}
+.miniature[data-scene-format=close] .world-building{left:5%;top:9%;width:40%;height:36%;display:flex;align-items:flex-end;justify-content:flex-start;padding:0 0 7% 0}
+.miniature[data-scene-format=close] .world-building .scene-tag{position:static}
+/* 札の位置（絵に対する％）。絵を差し替えたらここを合わせる */
+.hq-live .hq-pv{left:57%;top:12%}.hq-live .hq-battery{left:54%;top:31%}.hq-live .hq-pcs{right:1%;top:29%}
+.miniature[data-scene-format=close] .world-prep{right:1%;top:47%;width:34%;height:16%;display:flex;align-items:flex-start;justify-content:flex-end}
+.miniature[data-scene-format=close] .world-prep .scene-tag{position:static}
+/* 予定：屋上のパネル（建物の屋上）と黒板（車の下〜絵の下） */
+.hq-live .hq-roofcal{left:8.5%;top:5.2%;width:37.7%;height:17.8%}
+.hq-live .hq-chalk{left:1.5%;top:66%;width:36%;height:32%}
+.miniature[data-scene-format=close] .world-shelf{right:3%;bottom:3%;width:38%;height:24%;flex-direction:column-reverse;justify-content:flex-start;align-items:flex-end;gap:2px}
+.miniature[data-scene-format=close] .world-shelf>button{min-height:44px!important;padding:0;border:0;background:none!important;align-self:flex-end}
+/* 登録された従事者（最大3名）は建物前の広場に立たせる。柵・門・札と重ねない */
+.miniature[data-scene-format=close] .world-people{left:21%;top:44%;bottom:auto;width:44%;column-gap:6px}
+.miniature[data-scene-format=close] .hq-live .world-energy.hq-pv,.hq-live .miniature[data-scene-format=close] .world-energy.hq-pv{width:auto;height:auto;right:auto}
+.hq-live .person-token small{max-width:none;overflow:visible;font-size:.62rem;padding:1px 4px}
+.hq-guide{position:absolute;z-index:3;left:50%;top:58%;width:15%;min-width:52px;height:24%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 0 2px;border:0;background:none!important}
+.hq-guide .worker-token{height:47px}.hq-guide .worker-token i{width:66px;height:66px}
+.hq-guide small{padding:1px 7px;border:1px solid #9ed7c4;border-radius:4px;background:#0b3f3ae8;color:#f2fbf6;font-size:.72rem;font-weight:700}
+/* 絵の下：立上げ準備・3つの枠・次の予定 */
+.hq-live .hq-summary{margin:0 7px;gap:6px;justify-content:flex-start!important}
+.hq-live .progress-summary{display:grid!important;grid-template-columns:1fr auto;align-items:center;gap:2px 8px;padding:6px 10px!important;border:1px solid #6fae9c;border-radius:6px;background:#0d3236;color:#f0f8f4;text-align:left}
+.hq-live .progress-summary>span{font-size:1.08rem;font-weight:700}
+.hq-live .progress-summary>b{font-size:1.32rem;color:#8ff1c6}
+.hq-live .progress-summary .segmented-progress{grid-column:1/-1;height:14px;border:1px solid #9fb9b2;border-radius:3px;background:#0a2629}
+.hq-live .progress-summary .segmented-progress i{background:#e9f1ee}
+.hq-live .summary-counts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.hq-live .summary-counts button{width:auto!important;display:grid!important;grid-template-columns:auto 1fr;grid-template-rows:auto auto;align-items:center;justify-items:center;gap:2px 4px;min-height:58px!important;padding:5px 4px!important;border:1px solid #6fae9c;border-radius:6px;background:#0d3236;color:#cfe3dc;font-size:.78rem!important}
+.hq-live .summary-counts button>svg,.hq-live .summary-counts button>img{width:18px;height:18px;justify-self:end;opacity:.85}
+.hq-live .summary-counts button>span{justify-self:start;white-space:nowrap}
+.hq-live .summary-counts b{grid-column:1/-1;font-size:1.22rem!important;color:#f3faf6;white-space:nowrap}
+.hq-live .next-events{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px;align-items:stretch;padding:5px 6px;border:1px solid #6fae9c;border-radius:6px;background:#0d3236}
+.hq-live .next-events>button:first-child{border:0;background:none;color:#e7f4ee;font-size:.8rem;white-space:nowrap;padding:0 4px;min-height:40px}
+.hq-live .next-events>button+button{display:flex;align-items:center;gap:6px;min-height:40px;padding:0 8px;border:0;border-radius:4px;background:#eef3ee;color:#163a3a;font-size:.84rem;font-weight:700;text-align:left;min-width:0}
+.hq-live .next-events>button+button>span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hq-live .next-events i{font-style:normal}
+.hq-live .hq-footnote{margin:0 8px;font-size:.7rem}
+@media(max-height:740px){.hq-live .summary-counts button{min-height:50px!important}.hq-live .progress-summary{padding:4px 8px!important}.hq-live .next-events>button{min-height:36px!important}}
+@media(max-height:600px){.hq-live>.solvia-title{min-height:34px!important}.hq-live .hq-summary{gap:4px}.hq-live .progress-summary>span{font-size:.95rem}.hq-live .progress-summary>b{font-size:1.1rem}.hq-live .progress-summary .segmented-progress{height:10px}.hq-live .summary-counts button{min-height:46px!important;padding:3px!important}.hq-live .summary-counts b{font-size:1.05rem!important}.hq-live .next-events{padding:3px 5px}.hq-live .next-events>button{min-height:34px!important}}
+/* 地図：公開中の画面に合わせる（県カードの⚠は件数だけ、下部は 模式図▾ / 台帳 / 天気 の3つ） */
+.map-final .region-card .map-warning small{display:none}
+.map-final .region-card .map-warning span{display:inline-flex;align-items:center;gap:2px}
+.map-final .region-card .map-warning b{font-size:1rem}
+.map-final .landmark-bottom-tools>*{flex:1 1 0;min-width:0}
+.map-final .landmark-bottom-tools>*{min-height:44px;border-radius:0}
+.map-mode-menu{position:relative;display:flex;margin:0!important}
+.map-mode-menu>summary{list-style:none;display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:44px;border:0;border-right:1px solid #6d9f94;background:#0d3236;color:#eef7f2;font-size:.95rem;cursor:pointer}
+.map-mode-menu>summary::-webkit-details-marker{display:none}
+.map-mode-menu[open]>summary{background:#165b4c}
+.map-mode-items{position:absolute;left:0;bottom:calc(100% + 4px);z-index:20;display:grid;gap:4px;min-width:200px;padding:6px;border:1px solid #9ed7c4;border-radius:6px;background:#0b2f33;box-shadow:0 4px 14px #000a}
+.map-mode-items button{min-height:44px;text-align:left;padding:0 10px}
+.map-mode-items .map-animation-toggle{position:static!important;max-width:none!important;font-size:.85rem!important;min-height:44px!important}
+.map-final .landmark-bottom-tools{position:relative;z-index:30;overflow:visible!important}
+#vault-form label{display:flex;flex-direction:column;gap:5px;margin:12px 0}
+/* 低い画面（Claude の画面内など）：見出しを詰め、絵は空の側を多めに切って白河市やラーメン屋まで見せる（--map-anchor-y）。
+   県の札は上から詰めて並べ、下の 状態／点検／設備 のボタンと重ねない。 */
+@media(max-height:640px){
+ .map-final .map-heading-main{min-height:30px}.map-final .map-heading-progress>button{min-height:30px}
+ .map-final .landmark-stage{--map-anchor-y:.7}
+ .landmark-canvas.regional-map .city-0{top:24%}
+ .map-final .landmark-canvas.regional-map .region-card{height:80px;min-height:80px}
+ .map-final .landmark-canvas.regional-map .region-card>button[data-region]{min-height:34px!important}
+ .map-final .landmark-canvas .region-0{top:calc(var(--map-top-overflow,0px) + 6px)!important}
+ .map-final .landmark-canvas .region-1{top:calc(var(--map-top-overflow,0px) + 92px)!important}
+ .map-final .landmark-canvas .region-2{top:calc(var(--map-top-overflow,0px) + 178px)!important}
+}

@@ -1,0 +1,93 @@
+/* 点検する日の計画（ゲーム風）：紺の窓に白い縁、コマンドに ▶。本部と同じ紺の地 */
+body[data-page=route] #page{background:#081428!important}
+.gm{--gw:#0b1f5a;--gy:#ffd75e;--gs:#b9c6e8;font-family:"Hiragino Maru Gothic ProN","Rounded Mplus 1c","Yu Gothic",sans-serif;color:#fff;max-width:560px;margin:0 auto}
+.rt.gm{display:flex;flex-direction:column;gap:8px;padding:6px 2px 12px}
+.gw{border:3px solid #fff;border-radius:6px;box-shadow:inset 0 0 0 2px #000,0 0 0 2px #000;background:var(--gw);padding:8px 10px}
+.gt{display:flex;align-items:center;gap:8px;font-size:1.05rem;letter-spacing:.08em}.gt small{margin-left:auto;font-size:.7rem;color:var(--gy);letter-spacing:0}
+.gback{min-width:36px;min-height:36px;padding:0;border:2px solid #fff;border-radius:4px;background:none;color:#fff;font-size:1.1rem}
+.rt-state{margin-left:auto;font-size:.68rem;padding:2px 8px;border:1px solid var(--gs);border-radius:10px;color:var(--gs);letter-spacing:0}.rt-state.is-ok{border-color:#7be0a8;color:#7be0a8}
+.gh{font-size:.9rem;margin-bottom:6px;color:var(--gy)}
+.gn{margin:6px 0 0;font-size:.68rem;color:var(--gs);line-height:1.5}.gn b{color:#fff}
+.gw-warn{margin:6px 0 0;font-size:.74rem;color:var(--gy)}
+/* コマンド：押せる行。選ぶ（触れる・押す）と ▶ */
+.gc{position:relative;display:flex;align-items:center;gap:8px;width:100%;min-height:44px;padding:0 10px 0 22px;border:0;border-radius:3px;background:none;color:#fff;font:inherit;font-size:.92rem;text-align:left}
+.gc::before{content:'▶';position:absolute;left:4px;color:var(--gy);font-size:.8rem;opacity:0}
+.gc:hover::before,.gc:focus-visible::before,.gc:active::before{opacity:1}.gc:focus-visible{outline:1px dashed var(--gy)}
+.gc:disabled{opacity:.35}
+.gcmds{display:grid;grid-template-columns:1fr 1fr;gap:2px 10px}
+.gc-main{font-weight:800;color:var(--gy)}.gc-main::before{opacity:1}
+.gl{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.gl .gc b{min-width:6.5em}.gl .gc span{flex:1;font-size:.8rem;color:var(--gs)}.gl .gc em{font-style:normal;font-size:.68rem;color:var(--gs)}.gl .gc em.ok{color:#7be0a8}.gl .gc small{font-size:.62rem;color:var(--gs)}
+.gf{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px}.gf label{display:flex;flex-direction:column;gap:3px;font-size:.76rem;color:var(--gs)}
+.gf input,.gf select{min-height:40px;border:2px solid #fff;border-radius:4px;background:#061238;color:#fff;font:inherit;padding:0 6px}
+.gf .gc-main{width:auto;flex:1}
+/* ステータス */
+.rt-sum{display:grid;grid-template-columns:1fr auto;gap:2px 12px;margin:0;font-size:.88rem}.rt-sum dt{margin:0}.rt-sum dd{margin:0;text-align:right;color:var(--gy);font-weight:800;font-variant-numeric:tabular-nums}.rt-sum dd small{display:block;font-size:.62rem;color:#ff9b9b}.rt-sum dd.over{color:#ff9b9b}
+/* 行程：道と駒 */
+.road{position:relative;padding:2px 0}
+.road::before{content:'';position:absolute;left:70px;top:22px;bottom:22px;width:6px;background:repeating-linear-gradient(#8a8f96 0 8px,#e8e8e8 8px 12px);border-radius:2px}
+.stn{position:relative;display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:2px 4px;border:0;border-radius:4px;background:none;color:#fff;font:inherit;text-align:left}
+button.stn::after{content:'▶';position:absolute;left:-2px;color:var(--gy);opacity:0}button.stn:hover::after,button.stn:focus-visible::after,button.stn:active::after{opacity:1}
+.stn i{font-style:normal;color:var(--gs)}
+.tm{width:46px;text-align:right;font-size:.8rem;color:#9fe3ff;font-variant-numeric:tabular-nums;flex:none}
+.tok{position:relative;z-index:1;display:grid;place-items:center;flex:none;width:34px;height:34px;border:2px solid #fff;border-radius:4px;background:linear-gradient(180deg,#d9b25f,#8a6226);color:#1b1206;font-weight:900;font-size:.7rem;box-shadow:2px 2px 0 #000;font-variant-numeric:tabular-nums}
+.tok-home{background:#2b8a5a;color:#fff}
+.nm{flex:1;min-width:0;display:flex;flex-direction:column}.nm b{font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nm small{font-size:.66rem;color:var(--gs)}.nm small.ex{color:var(--gy)}
+.mv{margin:0 0 0 100px;font-size:.66rem;color:var(--gs);line-height:1.6}.unk,.mv.unk{color:var(--gy)}
+/* ポップアップの中（駒・拠点を足す・出発） */
+#dialog .gm-pop{color:inherit;font-family:inherit}
+.gm-pop .gp-h{display:flex;align-items:center;gap:8px;margin:0 0 8px;font-size:1rem}
+.gm-pop .gc{color:inherit}.gm-pop .gc::before{color:#c48a00}
+.gm-pop .gn{color:inherit;opacity:.7}
+.gm-pop .gl .gc span,.gm-pop .gl .gc small{color:inherit;opacity:.75}.gm-pop .gl .gc i{font-style:normal;font-weight:800;color:#0f6b4f}
+.gm-pop.gf label{color:inherit}.gm-pop.gf input,.gm-pop.gf select{background:#fff;color:#143c4c;border-color:#9cb8c4}
+.rt-min{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0 10px;font-size:.86rem}.rt-min input{width:5em;min-height:40px;padding:0 6px}.rt-min small{flex-basis:100%;font-size:.7rem;opacity:.7}.rt-min.is-ex input{border:2px solid #d9a400;background:#fff6d6}
+.rt-place{border:1px solid #c3cfd6;border-radius:6px;margin:8px 0;padding:4px 8px;display:grid;grid-template-columns:1fr 1fr;gap:6px}.rt-place legend{font-weight:700}.rt-place label{display:flex;flex-direction:column;gap:3px;font-size:.8rem}.rt-place label:first-of-type{grid-column:1/-1}
+body.motion-off .gc::before{transition:none}
+/* 計画の画面は本部の上の段・題名の段を出さず、ゲームの窓だけにする */
+body[data-page=route]{--shell-header:0px;--shell-title:0px}
+body[data-page=route] header{height:auto!important;min-height:env(safe-area-inset-top)!important;padding:env(safe-area-inset-top) 0 0!important;border:0!important;background:#081428}
+body[data-page=route] header>*{display:none!important}
+body[data-page=route] .topline{display:none!important}
+body[data-page=route] #page{padding:6px 8px!important}
+.gc,.gc:focus,.gc:active,.stn,.stn:focus{background:none!important;box-shadow:none!important}
+.gf .gc-main{white-space:nowrap;min-width:9em}
+/* 道：ドット絵のアスファルト（両側に草と縁石、真ん中に白い破線）。角ばった四角だけで描く */
+.road::before{left:70px!important;width:14px!important;top:20px!important;bottom:20px!important;border-radius:0!important;
+ background:linear-gradient(90deg,#4f9a3c 0 2px,#cfcfc8 2px 4px,#3b3f46 4px 10px,#cfcfc8 10px 12px,#4f9a3c 12px 14px)!important;image-rendering:pixelated}
+.road::after{content:'';position:absolute;left:76px;width:2px;top:24px;bottom:24px;background:repeating-linear-gradient(#f4f1e6 0 6px,transparent 6px 12px);pointer-events:none}
+.road .tok{box-shadow:2px 2px 0 #000,0 0 0 2px #000}
+/* 本日・今月の点検の窓（ゲーム風） */
+#dialog .td{color:#fff}
+#dialog:has(.td){background:#081428;color:#fff;border:3px solid #fff}
+#dialog:has(.td) .modal-top{background:#0b1f5a;border-bottom:3px solid #fff}
+.td{display:flex;flex-direction:column;gap:8px}
+.td-sum{display:flex;align-items:center;gap:8px}.td-sum b{font-size:1.5rem;color:#ffd75e;font-variant-numeric:tabular-nums}.td-sum small{font-size:.72rem;color:#b9c6e8}
+.td-pips{margin-left:auto;display:flex;flex-wrap:wrap;gap:4px;max-width:60%;justify-content:flex-end}.td-pips i{width:14px;height:14px;border:2px solid #fff;background:#ffd75e}.td-pips i.d{background:#7be0a8}
+.td-list{padding:2px 8px}
+.td-site{border-bottom:1px dashed #33507e}.td-site:last-child{border:0}
+.td-row{position:relative;display:flex;align-items:center;gap:8px;width:100%;min-height:54px;padding:2px 2px 2px 18px;border:0;background:none!important;color:#fff;font:inherit;text-align:left}
+.td-site.is-open .td-row::before{content:'▶';position:absolute;left:0;color:#ffd75e}
+.td-tm{width:42px;font-size:.78rem;color:#9fe3ff;font-variant-numeric:tabular-nums;line-height:1.2}
+.td-tok{display:grid;place-items:center;flex:none;width:34px;height:34px;border:2px solid #fff;border-radius:4px;background:linear-gradient(180deg,#d9b25f,#8a6226);color:#1b1206;font-weight:900;font-size:.7rem;box-shadow:2px 2px 0 #000}
+.td-nm{flex:1;min-width:0;display:flex;flex-direction:column}.td-nm b{font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.td-nm small{font-size:.66rem;color:#b9c6e8}
+.td-st{flex:none;font-size:.66rem;padding:2px 8px;border:1px solid #ffd75e;border-radius:10px;color:#ffd75e}.td-st.ok{border-color:#7be0a8;color:#7be0a8}
+.td-open{display:none;padding:0 0 8px 18px}.td-site.is-open .td-open{display:block}
+.td-acts{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px}.td-acts small{grid-column:1/-1;font-size:.66rem;color:#b9c6e8}
+.td-btn{min-height:44px;border:2px solid #fff;border-radius:4px;background:none;color:#fff;font:inherit;font-size:.84rem}.td-main{border-color:#ffd75e;color:#ffd75e;font-weight:800}
+.td-note{margin:0;font-size:.64rem;color:#b9c6e8}.td-warn{margin:0;font-size:.74rem;color:#ffd75e}
+.gclose{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;min-width:44px;min-height:40px;margin-left:6px;padding:0 4px;border:2px solid #fff;border-radius:4px;background:none;color:#fff;font:inherit;font-size:1.1rem;line-height:1}
+.gclose small{font-size:.52rem;letter-spacing:0;color:#b9c6e8;margin-top:1px}
+.gt small+.gclose{margin-left:8px}
+.gt .rt-state{margin-left:auto}
+.gt{letter-spacing:.02em!important;white-space:nowrap}.gt .rt-state{white-space:nowrap;font-size:.6rem;padding:1px 6px}
+@media(max-width:400px){.gt{font-size:.92rem!important}}
+.tok.tok-done{background:linear-gradient(180deg,#7be0a8,#2b8a5a)!important;color:#05261a}
+.done-mk{font-style:normal;font-size:.62rem;padding:0 5px;margin-left:4px;border:1px solid #7be0a8;border-radius:8px;color:#7be0a8;vertical-align:2px}
+.rt-sum dd small.ok{display:inline;margin-left:6px;color:#7be0a8;font-size:.66rem}
+.td-route{display:flex;align-items:center;gap:8px;width:100%;min-height:52px;color:#ffd75e;font:inherit;font-size:.95rem;font-weight:800;text-align:left}
+.td-route small{margin-left:auto;font-size:.66rem;font-weight:400;color:#b9c6e8}
+.td-sum b.warn{color:#ff9b8a}
+.td-tok-warn{box-shadow:2px 2px 0 #000,0 0 0 2px #ff5a4a}
+.td-st-warn{border-color:#ff9b8a;color:#ff9b8a}
+.td-sum b.sub{font-size:1.15rem;margin-left:8px}.td-sum b.sub.warn{color:#ff9b8a}
