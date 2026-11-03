@@ -187,3 +187,10 @@ body .board-screen .bp-alert:not(.is-urgent) .new-pill,body .map-final .map-warn
 /* 県の画面：緊急は赤、要対応は黄。選んでいるボタンは黄色をやめて水色（黄色は要対応だけ） */
 .md-sum b.urgent{color:#ff6b5e!important}
 .md-bar button[aria-pressed=true]{background:#0b1f5a!important;color:#46e0f0!important;border-color:#46e0f0!important}
+/* 本部・地図の人の絵のボタン：絵の下に「全員」「自分」（≡ 一覧と同じ形） */
+.me-chip .me-lab{display:none}
+.hq-live>.solvia-title>.me-chip,.map-final .map-heading-main>.me-chip{flex-direction:column;gap:2px;width:40px!important;min-width:40px!important;height:46px!important;border:0!important;border-radius:0!important;background:none!important}
+.hq-live>.solvia-title>.me-chip svg,.map-final .map-heading-main>.me-chip svg{width:26px!important;height:26px!important;padding:3px;border:1px solid #8fa6cc;border-radius:50%;background:#0b1f5a;box-sizing:border-box}
+.hq-live>.solvia-title>.me-chip.is-mine svg,.map-final .map-heading-main>.me-chip.is-mine svg{border:2px solid #46e0f0}
+.hq-live>.solvia-title>.me-chip .me-lab,.map-final .map-heading-main>.me-chip .me-lab{display:block;font-size:.58rem;line-height:1;color:#cfe3dc;font-weight:700;max-width:none!important;padding:0!important;min-height:0!important}
+.hq-live>.solvia-title>.me-chip.is-mine .me-lab,.map-final .map-heading-main>.me-chip.is-mine .me-lab{color:#46e0f0}
