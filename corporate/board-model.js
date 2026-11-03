@@ -94,7 +94,7 @@ export function boardSummary(d,{today=day(),now=Date.now()}={}){
   const sites=boardSites(d),issues=unresolvedItems(d),rowIds=new Set(issues.rows.map(r=>r.id)),alarms=sites.flatMap(s=>activeAlarms(s).map(a=>({...a,siteId:s.id,linked:!!a.issueId&&rowIds.has(a.issueId)})));
   const comm={normal:0,unknown:0,caution:0,alarm:0,none:0};for(const s of sites)comm[commState(s,now).state]++;
   return {sites:sites.length,unnumbered:(d?.sites||[]).length-sites.length,today:inspectionPeriod(d,{period:'today',today}),month:inspectionPeriod(d,{period:'month',today}),
-    issues:{known:issues.known,count:issues.rows.length+attentionExtras(d,now).length,issue:issues.rows.filter(r=>r.type==='issue').length,incident:issues.rows.filter(r=>r.type==='incident').length,rows:issues.rows},
+    urgent:urgentCount(d,'',now),issues:{known:issues.known,count:issues.rows.length+attentionExtras(d,now).length,issue:issues.rows.filter(r=>r.type==='issue').length,incident:issues.rows.filter(r=>r.type==='incident').length,rows:issues.rows},
     alarms:{active:alarms.length,linked:alarms.filter(a=>a.linked).length,unlinked:alarms.filter(a=>!a.linked).length,rows:alarms},comm,
     watched:sites.filter(s=>s.watch?.on).length};
 }
@@ -124,6 +124,8 @@ const sinceOf=v=>{const t=Date.parse(v||'');return Number.isFinite(t)?t:null;};
 export function reviewKeys(s){return new Set(Array.isArray(s?.review?.keys)?s.review.keys:[]);}
 // 要対応の数（本部・地図・点検の札）は「確認すること全部」でそろえる：記録した不具合・緊急対応（unresolvedItems）に、機器の警報と通信の受信の問題を足す。不具合に結び付けた警報は二重に数えない。
 export function attentionExtras(d,now=Date.now()){const rows=[];for(const s of (Array.isArray(d?.sites)?d.sites:[]))for(const i of siteAttention(d,s,now).items)if((i.source==='alarm'&&!(s.monitoring?.alarms||[]).find(x=>'alarm:'+x.id===i.key)?.issueId)||i.source==='comm')rows.push({id:i.key,key:i.key,type:i.source,title:i.title,siteId:s.id,siteName:s.name,region:regionOfSite(s),status:i.stage,kind:i.kind,createdAt:i.since||'',occurredAt:i.since||''});return rows;}
+// 緊急（🚨）の数。1件でもあれば本部・地図・点検の札を赤い「緊急」にする
+export function urgentCount(d,region='',now=Date.now()){let n=0;for(const s of (Array.isArray(d?.sites)?d.sites:[]))if(!region||regionOfSite(s)===region)n+=siteAttention(d,s,now).items.filter(i=>i.kind==='alarm').length;return n;}
 export function siteAttention(d,s,now=Date.now()){
   const items=[],seen=reviewKeys(s),visits=(d.visits||[]).filter(v=>v.siteId===s.id&&v.status==='complete').map(v=>sinceOf(v.at)).filter(t=>t!==null);
   const push=(key,target,kind,title,since,extra={})=>{const t=sinceOf(since);items.push({key,target,kind,title:title||'内容未記入',since:t===null?null:new Date(t).toISOString(),days:t===null?null:Math.floor((now-t)/DAY)+1,spanned:t===null?null:visits.filter(v=>v>t).length,isNew:!seen.has(key),...extra});};
@@ -155,12 +157,26 @@ export function reviewItem(d,siteId,key,way,{note,due,personId}={},at=new Date()
 export function saveAction(d,siteId,key,patch,at=new Date().toISOString()){const s=d.sites.find(x=>x.id===siteId);if(!s)throw Error('拠点が見つかりません');const prev=s.review?.actions?.[key];if(!prev)return reviewItem(d,siteId,key,patch.way||'未定',patch,at);if(patch.way&&!WAYS.includes(patch.way))throw Error('対処を選んでください');s.review.actions={...s.review.actions,[key]:{...prev,...patch,at}};return '対処を保存した';}
 // 1件の段階を進める。確認済み→対応中（不具合は状態を「確認中」にする）、対応中→解決（不具合は「完了」、警報は復帰を記録）。
 // 緊急対応と通信の状態は、ここでは解決にしない（記録の画面・通信の設定で終える）。戻り値：行った操作の名前。
+// 確かめて解決（1回で）：遠隔や現地で確かめて終わったとき。方法（現地・遠隔・外部）と日付を必ず残す。「未定」では解決にしない。
+export function resolveNow(d,siteId,key,way,patch={},at=new Date().toISOString()){
+  if(!['現地','遠隔','外部'].includes(way))throw Error('確かめた方法（現地・遠隔・外部）を選んでください');
+  const s=d.sites.find(x=>x.id===siteId);if(!s)throw Error('拠点が見つかりません');const item=siteAttention(d,s,Date.parse(at)||Date.now()).items.find(i=>i.key===key);if(!item)throw Error('対象が見つかりません（すでに解決済みの可能性があります）');
+  if(item.source!=='issue'&&item.source!=='alarm')throw Error('この項目は記録の画面・通信の設定で終えてください');
+  if(item.stage==='新')reviewItem(d,siteId,key,way,patch,at);else saveAction(d,siteId,key,{...patch,way},at);
+  const issue=item.source==='issue'?(s.field?.issues||[]).find(x=>'issue:'+x.id===key):null,alarm=item.source==='alarm'?(s.monitoring?.alarms||[]).find(x=>'alarm:'+x.id===key):null;
+  if(issue){issue.status='完了';issue.updatedAt=at;}else if(alarm)alarm.recoveredAt=at;
+  s.review.actions={...s.review.actions,[key]:{...s.review.actions[key],resolvedAt:at}};
+  if(s.review?.progress?.[key]){const {[key]:_,...rest}=s.review.progress;s.review={...s.review,progress:rest};}
+  return '解決にした（'+way+'で確認）';
+}
 export function advanceItem(d,siteId,key,at=new Date().toISOString()){
   const s=d.sites.find(x=>x.id===siteId);if(!s)throw Error('拠点が見つかりません');const item=siteAttention(d,s,Date.parse(at)||Date.now()).items.find(i=>i.key===key);if(!item)throw Error('対象が見つかりません（すでに解決済みの可能性があります）');
   if(item.stage==='新')throw Error('確認するときは対処（現地・遠隔・外部・未定）を選んでください');
   const issue=item.source==='issue'?(s.field?.issues||[]).find(x=>'issue:'+x.id===key):null,alarm=item.source==='alarm'?(s.monitoring?.alarms||[]).find(x=>'alarm:'+x.id===key):null;
   if(item.stage==='確認済み'){if(issue){issue.status='確認中';issue.updatedAt=at;}else{s.review={...(s.review||{}),progress:{...(s.review?.progress||{}),[key]:{state:'対応中',at}}};}return '対応を始めた';}
+  if(!['現地','遠隔','外部'].includes(s.review?.actions?.[key]?.way))throw Error('解決にするときは、確かめた方法（現地・遠隔・外部）を選んで保存してください');
   if(issue){issue.status='完了';issue.updatedAt=at;}else if(alarm){alarm.recoveredAt=at;}else throw Error('この項目は記録の画面・通信の設定で終えてください');
+  s.review.actions={...s.review.actions,[key]:{...s.review.actions[key],resolvedAt:at}};
   if(s.review?.progress?.[key]){const {[key]:_,...rest}=s.review.progress;s.review={...s.review,progress:rest};}return '解決にした';
 }
 // 全拠点の「確認すること」を表の行にする（一覧の画面用）。

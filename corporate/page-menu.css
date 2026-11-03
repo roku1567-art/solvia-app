@@ -148,3 +148,29 @@ body .board-screen .bp-alert.has *{color:#1b1206!important}
 body .hq-live .summary-counts .hq-alert.is-on svg,body .map-final .map-warning.has-warning svg{filter:none!important;stroke:#1b1206!important}
 body.motion-off .hq-alert.is-on,body.motion-off .map-warning.has-warning,body.motion-off .bp-alert.has{animation:none!important}
 .md-sum b.warn{color:#ffd23c!important}
+/* 緊急が1件でもあれば、要対応の札を赤い「🚨 緊急 n・要対応 m」に（本部・地図・点検） */
+@keyframes alert-red-blink{0%,100%{box-shadow:inset 0 0 0 1px #fff6,0 0 6px #ff5a4a88}50%{box-shadow:inset 0 0 0 1px #fff6,0 0 18px #ff5a4add}}
+body .hq-live .summary-counts .hq-alert.is-urgent,
+body .map-final .landmark-canvas.regional-map .region-actions>button.map-warning.is-urgent,
+body .map-final .region-card .map-warning.is-urgent,
+body .map-final .map-heading-progress .map-warning.is-urgent,
+body .board-screen .bp-alert.is-urgent{background:#d63a2e!important;border:1px solid #fff!important;color:#fff!important;animation:alert-red-blink 1.4s ease-in-out infinite!important}
+body .hq-live .summary-counts .hq-alert.is-urgent *,
+body .map-final .map-warning.is-urgent *,
+body .board-screen .bp-alert.is-urgent *{color:#fff!important}
+.urg-ic{font-style:normal;font-size:1.05em;line-height:1}
+body.motion-off .is-urgent{animation:none!important}
+/* 自分／全員の切り替え（本部・地図・点検） */
+.me-chip{display:inline-flex;align-items:center;gap:4px;min-height:28px;max-width:8.5em;padding:0 8px;border:1px solid #8fa6cc;border-radius:14px;background:#0b1f5a;color:#dfe9f3;font-size:.7rem;font-weight:700;white-space:nowrap;flex:none}
+.me-chip span{overflow:hidden;text-overflow:ellipsis}.me-chip svg{width:16px;height:16px}
+.me-chip.is-mine{border-color:#46e0f0;color:#46e0f0}
+.me-people{display:grid;grid-template-columns:1fr 1fr;gap:6px}.me-people .td-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}.me-people small{font-size:.62rem;color:#b9c6e8}
+.hq-live>.solvia-title>.me-chip{margin-left:6px}
+.map-final .map-heading-main>.me-chip{margin-left:8px}
+.bp-dep{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:3px;background:#c9a2ff;color:#1b1206;font-size:9px;font-weight:900;line-height:1;flex:none}
+/* 本部・地図では人の絵だけの小さなボタン（真ん中の腕時計と重ならない）。自分の担当だけを見ているときは水色の枠 */
+.hq-live>.solvia-title>.me-chip,.map-final .map-heading-main>.me-chip{position:absolute!important;top:50%;transform:translateY(-50%);width:30px!important;min-width:30px!important;height:30px!important;min-height:0!important;max-width:none!important;padding:0!important;justify-content:center;margin:0!important;border-radius:50%!important}
+.hq-live>.solvia-title>.me-chip span,.map-final .map-heading-main>.me-chip span{display:none!important}
+.hq-live>.solvia-title>.me-chip svg,.map-final .map-heading-main>.me-chip svg{width:18px!important;height:18px!important;max-width:none!important}
+.map-final .map-heading-main>.me-chip{right:54px}
+.hq-live>.solvia-title>.me-chip{left:calc(50% + 34px)}
