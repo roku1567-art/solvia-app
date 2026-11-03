@@ -113,3 +113,8 @@ body[data-page=visit] #page{padding:0!important;background:radial-gradient(120% 
 .visit2 .v-eqtabs button{border:2px solid #8fa6cc!important;background:#0b1f5a!important;border-radius:6px!important}
 .visit2 .v-eqtabs button[aria-selected=true]{border-color:#fff!important;box-shadow:0 0 0 2px #000,0 0 8px #46e0f066}
 .visit2 .v-head>button{border:2px solid #8fa6cc!important;background:#0b1f5a!important}
+/* 記録の画面：履歴・対処法の状態は盤と同じ「印＋段階」の札。解決した行は確かめた方法。記入の数は水色（黄色は要対応だけ） */
+.r-table .st-chip{margin-top:3px}.r-table .st-chip .bp-attn{display:inline-block!important;width:16px!important;height:16px!important;margin:0!important}
+.r-table .st-chip em{font-size:.6rem}
+.r-how{display:block;font-size:.66rem;color:#5fe39a}
+.visit2 .r-todo,.r-todo{color:#46e0f0!important}
