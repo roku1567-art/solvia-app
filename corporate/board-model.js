@@ -94,7 +94,7 @@ export function boardSummary(d,{today=day(),now=Date.now()}={}){
   const sites=boardSites(d),issues=unresolvedItems(d),rowIds=new Set(issues.rows.map(r=>r.id)),alarms=sites.flatMap(s=>activeAlarms(s).map(a=>({...a,siteId:s.id,linked:!!a.issueId&&rowIds.has(a.issueId)})));
   const comm={normal:0,unknown:0,caution:0,alarm:0,none:0};for(const s of sites)comm[commState(s,now).state]++;
   return {sites:sites.length,unnumbered:(d?.sites||[]).length-sites.length,today:inspectionPeriod(d,{period:'today',today}),month:inspectionPeriod(d,{period:'month',today}),
-    urgent:urgentCount(d,'',now),issues:{known:issues.known,count:issues.rows.length+attentionExtras(d,now).length,issue:issues.rows.filter(r=>r.type==='issue').length,incident:issues.rows.filter(r=>r.type==='incident').length,rows:issues.rows},
+    urgent:urgentCount(d,'',now),issues:{known:issues.known,...(()=>{const idx=attentionIndex(d,'',now),all=[...issues.rows,...attentionExtras(d,now)];return {count:all.filter(r=>idx.get(rowKey(r))?.kind!=='watch').length,watch:all.filter(r=>idx.get(rowKey(r))?.kind==='watch').length,newCount:[...idx.values()].filter(v=>v.isNew).length};})(),issue:issues.rows.filter(r=>r.type==='issue').length,incident:issues.rows.filter(r=>r.type==='incident').length,rows:issues.rows},
     alarms:{active:alarms.length,linked:alarms.filter(a=>a.linked).length,unlinked:alarms.filter(a=>!a.linked).length,rows:alarms},comm,
     watched:sites.filter(s=>s.watch?.on).length};
 }
@@ -125,6 +125,9 @@ export function reviewKeys(s){return new Set(Array.isArray(s?.review?.keys)?s.re
 // 要対応の数（本部・地図・点検の札）は「確認すること全部」でそろえる：記録した不具合・緊急対応（unresolvedItems）に、機器の警報と通信の受信の問題を足す。不具合に結び付けた警報は二重に数えない。
 export function attentionExtras(d,now=Date.now()){const rows=[];for(const s of (Array.isArray(d?.sites)?d.sites:[]))for(const i of siteAttention(d,s,now).items)if((i.source==='alarm'&&!(s.monitoring?.alarms||[]).find(x=>'alarm:'+x.id===i.key)?.issueId)||i.source==='comm')rows.push({id:i.key,key:i.key,type:i.source,title:i.title,siteId:s.id,siteName:s.name,region:regionOfSite(s),status:i.stage,kind:i.kind,createdAt:i.since||'',occurredAt:i.since||''});return rows;}
 // 緊急（🚨）の数。1件でもあれば本部・地図・点検の札を赤い「緊急」にする
+// 確認すること全部の索引（キー→区分・新）。要対応の数（様子見を除く）と〈新〉の数に使う
+export function attentionIndex(d,region='',now=Date.now()){const m=new Map();for(const s of (Array.isArray(d?.sites)?d.sites:[]))if(!region||regionOfSite(s)===region)for(const i of siteAttention(d,s,now).items)m.set(i.key,{kind:i.kind,isNew:i.isNew});return m;}
+export const rowKey=r=>r.type==='issue'?'issue:'+r.id:r.type==='incident'?'incident:'+r.id:r.key;
 export function urgentCount(d,region='',now=Date.now()){let n=0;for(const s of (Array.isArray(d?.sites)?d.sites:[]))if(!region||regionOfSite(s)===region)n+=siteAttention(d,s,now).items.filter(i=>i.kind==='alarm').length;return n;}
 export function siteAttention(d,s,now=Date.now()){
   const items=[],seen=reviewKeys(s),visits=(d.visits||[]).filter(v=>v.siteId===s.id&&v.status==='complete').map(v=>sinceOf(v.at)).filter(t=>t!==null);

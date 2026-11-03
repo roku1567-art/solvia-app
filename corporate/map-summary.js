@@ -1,6 +1,6 @@
 import {eventsFor,regionOf} from './integration-model.js';
 import {day,validDay} from './model.js';
-import {attentionExtras,urgentCount} from './board-model.js';
+import {attentionExtras,urgentCount,attentionIndex,rowKey} from './board-model.js';
 const regions=['県北','県中','県南','未分類'];
 // Read-only projection. All badges and drilldowns consume these same rows.
 export function unresolvedItems(d){
@@ -27,7 +27,8 @@ export function inspectionPeriod(d,{region='',period='today',today=day()}={}){
 }
 export function mapSummary(d,{region='',today=day()}={}){
  const issues=unresolvedItems(d),sites=(Array.isArray(d.sites)?d.sites:[]).filter(s=>!region||regionOf(s)===region),unknown=issues.unknown.filter(s=>!region||sites.some(x=>x.id===s.id));
- const extra=attentionExtras(d).filter(i=>!region||i.region===region);
- return {urgent:urgentCount(d,region),sites:sites.length,sitesKnown:Array.isArray(d.sites),issues:[...issues.rows.filter(i=>!region||i.region===region),...extra],issuesKnown:region?Array.isArray(d.sites)&&Array.isArray(d.incidents)&&unknown.length===0&&issues.rows.filter(i=>i.region===region).every(i=>i.id):issues.known,unknown,today:inspectionPeriod(d,{region,period:'today',today}),month:inspectionPeriod(d,{region,period:'month',today})};
+ const extra=attentionExtras(d).filter(i=>!region||i.region===region),idx=attentionIndex(d,region),allRows=[...issues.rows.filter(i=>!region||i.region===region),...extra],isWatch=r=>idx.get(rowKey(r))?.kind==='watch';
+ // 要対応の数は様子見を除く（緊急・要対応・不明）。〈新〉はまだ見ていないもの全部（様子見も含む）
+ return {urgent:urgentCount(d,region),newCount:[...idx.values()].filter(v=>v.isNew).length,watch:allRows.filter(isWatch),sites:sites.length,sitesKnown:Array.isArray(d.sites),issues:allRows.filter(r=>!isWatch(r)),issuesKnown:region?Array.isArray(d.sites)&&Array.isArray(d.incidents)&&unknown.length===0&&issues.rows.filter(i=>i.region===region).every(i=>i.id):issues.known,unknown,today:inspectionPeriod(d,{region,period:'today',today}),month:inspectionPeriod(d,{region,period:'month',today})};
 }
 export {regions};

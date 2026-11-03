@@ -174,3 +174,13 @@ body.motion-off .is-urgent{animation:none!important}
 .hq-live>.solvia-title>.me-chip svg,.map-final .map-heading-main>.me-chip svg{width:18px!important;height:18px!important;max-width:none!important}
 .map-final .map-heading-main>.me-chip{right:54px}
 .hq-live>.solvia-title>.me-chip{left:calc(50% + 34px)}
+/* 〈新〉の数（まだ見ていないもの）。札が光るのは新があるときか緊急があるときだけ */
+.new-pill{display:inline-block;margin-left:4px;padding:0 5px;border-radius:8px;background:#1b1206;color:#ffd23c;font-style:normal;font-size:.62rem;font-weight:800;line-height:1.5;vertical-align:middle;white-space:nowrap}
+.is-urgent .new-pill{background:#fff;color:#c8352a}
+body .hq-live .summary-counts .hq-alert.is-on:not(.has-new):not(.is-urgent),body .map-final .map-warning.has-warning:not(.has-new):not(.is-urgent),body .board-screen .bp-alert.has:not(.has-new):not(.is-urgent){animation:none!important;box-shadow:none!important}
+.map-final .region-actions .map-warning .new-pill{display:none}
+.hq-live .summary-counts .hq-alert{position:relative}.hq-live .summary-counts .hq-alert .new-pill{position:absolute;top:4px;right:4px;margin:0}
+body .is-urgent .new-pill,body .hq-live .summary-counts .hq-alert.is-urgent .new-pill,body .board-screen .bp-alert.is-urgent .new-pill,body .map-final .map-warning.is-urgent .new-pill{color:#c8352a!important;background:#fff!important}
+.hq-live .summary-counts .hq-alert .new-pill{top:auto!important;bottom:5px;right:6px}
+body .hq-live .summary-counts .hq-alert:not(.is-urgent) .new-pill{color:#ffd23c!important}
+body .board-screen .bp-alert:not(.is-urgent) .new-pill,body .map-final .map-warning:not(.is-urgent) .new-pill{color:#ffd23c!important}
