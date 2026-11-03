@@ -194,3 +194,12 @@ body .board-screen .bp-alert:not(.is-urgent) .new-pill,body .map-final .map-warn
 .hq-live>.solvia-title>.me-chip.is-mine svg,.map-final .map-heading-main>.me-chip.is-mine svg{border:2px solid #46e0f0}
 .hq-live>.solvia-title>.me-chip .me-lab,.map-final .map-heading-main>.me-chip .me-lab{display:block;font-size:.58rem;line-height:1;color:#cfe3dc;font-weight:700;max-width:none!important;padding:0!important;min-height:0!important}
 .hq-live>.solvia-title>.me-chip.is-mine .me-lab,.map-final .map-heading-main>.me-chip.is-mine .me-lab{color:#46e0f0}
+/* 本部の人の絵：時計の横ではなく、地図と同じく「≡ 一覧」の左に。天気の札はその左に詰める */
+body .hq-live>.solvia-title{padding-right:96px!important}
+body .hq-live>.solvia-title>.me-chip{left:auto!important;right:50px!important}
+body .hq-live>.solvia-title>.weather-chip{margin-left:auto!important;min-width:0!important;max-width:calc(50% - 104px)!important;overflow:hidden;padding:0 2px!important}
+body .hq-live>.solvia-title>.weather-chip span,body .hq-live>.solvia-title>.weather-chip b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body .hq-live>.solvia-title>.weather-chip{font-size:.62rem!important;gap:2px!important;justify-content:center!important}
+body .hq-live>.solvia-title>.weather-chip>span:first-child{display:none!important}
+body .hq-live>.solvia-title>.weather-chip b{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.15;text-align:center}
+body .hq-live>.solvia-title>.weather-chip{width:74px!important;max-width:74px!important;flex:none!important;padding:0!important}body .hq-live>.solvia-title>.weather-chip b{white-space:nowrap!important;font-size:.6rem!important}body .hq-live>.solvia-title>.weather-chip>*:not(b){display:none!important}

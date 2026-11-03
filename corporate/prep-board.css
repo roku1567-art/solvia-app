@@ -94,3 +94,52 @@ body.gm-page #page .small-note{color:#b9c6e8}
 .si-stats{grid-template-columns:1fr}.si-stats dd{text-align:right;margin:0}.si-stats dd small{display:block;font-size:.6rem;color:#b9c6e8}
 .si-sum{flex-wrap:wrap;gap:4px 6px;margin-bottom:4px}.si-v{color:#ffd75e}
 .si-cmds{display:grid;grid-template-columns:1fr 1fr;gap:6px}.si-cmds .si-wide{grid-column:1/-1}#dialog.gm-dlg .si-cmds .td-btn{background:none!important;color:#fff!important}#dialog.gm-dlg .si-cmds .td-main{color:#ffd75e!important}
+/* ゲーム風のページの表（BESS点検項目・一覧表示など）：紺の地に白い字。横に広い表は表の中だけ横に動かす */
+body.gm-page .table-wrap{background:#0b1f5a!important;color:#fff!important;border:3px solid #fff;border-radius:6px;box-shadow:0 0 0 2px #000;overflow-x:auto;-webkit-overflow-scrolling:touch}
+body.gm-page .table-wrap table{background:none!important;color:#fff!important;border-collapse:collapse;min-width:100%}
+body.gm-page .table-wrap th{background:#061238!important;color:#b9c6e8!important;border-bottom:2px solid #fff!important;white-space:nowrap;font-weight:700}
+body.gm-page .table-wrap td{background:none!important;color:#fff!important;border-bottom:1px dashed #33507e!important;vertical-align:top}
+body.gm-page .table-wrap td:first-child,body.gm-page .table-wrap th:first-child{white-space:nowrap}
+body.gm-page .table-wrap .table-name{background:none!important;border:0!important;color:#fff!important;font-weight:800;text-align:left;padding:0;min-width:7em}
+body.gm-page .table-wrap small{color:#b9c6e8!important}
+/* 監視・保存値一覧 */
+.mo-site{display:grid;gap:6px;padding:6px 0;border-bottom:1px dashed #33507e}.mo-site:last-child{border:0}
+.mo-vals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+.mo-v{display:flex;flex-direction:column;padding:4px 6px;border:1px solid #4d6a88;border-radius:4px;background:#061238}
+.mo-v small{font-size:.62rem;color:#b9c6e8}.mo-v b{font-size:.9rem;color:#fff}.mo-v b.na{color:#8fa6cc;font-size:.78rem}.mo-v i{font-style:normal;font-size:.58rem;color:#8fa6cc}
+.mo-wx{min-height:36px!important}
+/* カレンダー：日ごとに予定の札（最大2つ＋残りの数）。点検＝水色、済み＝緑、そのほか＝桃色。曜日の帯も紺に */
+body.gm-page .calendar-grid{background:#081428!important;border:3px solid #fff;border-radius:6px;overflow:hidden;box-shadow:0 0 0 2px #000}
+body.gm-page .calendar-grid>span{background:#061238!important;color:#b9c6e8!important;font-weight:700;padding:4px!important}
+body.gm-page .calendar-grid>span:first-child{color:#ff9b8a!important}body.gm-page .calendar-grid>span:nth-child(7){color:#7cc4ff!important}
+body.gm-page .calendar-day{background:#0b1f5a!important;color:#fff!important;border-color:#33507e!important;min-height:64px!important;padding:3px 2px!important;display:flex!important;flex-direction:column;align-items:stretch;gap:2px;overflow:hidden}
+body.gm-page .calendar-day.out{background:#081428!important;color:#4d5a68!important}
+body.gm-page .calendar-day.today{box-shadow:inset 0 0 0 2px #46e0f0!important}
+.cd-no{font-size:.72rem;line-height:1.1}
+.cd-ev{display:block;padding:0 2px;border-radius:3px;font-size:.56rem;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}
+.cd-ev.is-insp{background:#46e0f0;color:#061238}.cd-ev.is-done{background:#5fe39a;color:#061238}.cd-ev.is-other{background:#ff8ac4;color:#3a0a22}
+.cd-more{font-size:.56rem;color:#b9c6e8;line-height:1.2}
+.urg-row{display:grid;gap:6px;padding:6px 0;border-bottom:1px dashed #33507e}.urg-list{margin-bottom:8px}.urg-list .gh{color:#ff9b8a;font-weight:800;display:flex;align-items:center;gap:6px}
+/* 見た目をそろえる（2026-11-03）：黄色は要対応だけ。データ領域の欄・すごろくの進行中・計画比較のボタンは水色。次の準備・計画比較も紺の窓 */
+.gm-mode select{border-color:#46e0f0!important;color:#46e0f0!important}
+.sq-doing{background:#46e0f0!important;box-shadow:inset -2px -2px 0 #1f8fa0,inset 2px 2px 0 #c8f6ff!important}
+.sg-lg .p{background:#46e0f0!important}
+body.gm-page .prep-row{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:56px;padding:8px 10px;border:0;border-bottom:1px dashed #33507e;background:#0b1f5a!important;color:#fff!important;text-align:left}
+body.gm-page .prep-row strong{color:#fff}body.gm-page .prep-row small{color:#b9c6e8}body.gm-page .prep-row b{color:#46e0f0}
+body.gm-page .big-callout{background:#0b1f5a!important;color:#fff!important;border:3px solid #fff;border-radius:6px;box-shadow:0 0 0 2px #000}
+body.gm-page .big-callout h2{color:#fff!important;font-size:1.1rem}body.gm-page .big-callout p{color:#b9c6e8!important}
+body.gm-page .big-callout .primary{background:none!important;border:2px solid #46e0f0!important;color:#46e0f0!important;font-weight:800}
+body.gm-page .panel-head{background:#061238!important;color:#fff!important;border-bottom:2px solid #fff}
+body .sg .sq-doing,body .sg .sq-doing:hover,body .sg .sq-doing:focus{background:#46e0f0!important}
+.sg-next em{border-color:#46e0f0!important;color:#46e0f0!important}
+.urg-row{grid-template-columns:minmax(0,1fr)}.urg-row .td-row{min-width:0}.urg-row .td-nm b{white-space:normal}
+.urg-row .td-btn{width:100%;box-sizing:border-box}.urg-row .td-main{border-color:#ff8a7a!important;color:#ff9b8a!important}
+/* 小さな点をそろえる（2026-11-03）：番号の札は金色をやめ白い枠（盤・記録の画面と同じ）。要対応の行の札は黄色の枠 */
+body .td-tok{background:#061238!important;color:#fff!important;border:2px solid #fff!important;box-shadow:none!important;font-family:ui-monospace,monospace}
+body .td-tok.td-tok-warn{border-color:#ffd23c!important;color:#ffd23c!important}
+/* ゲーム風のページの「＋ 登録」などの緑のボタンは、水色の枠に */
+body.gm-page #page button.primary:not(.td-btn):not(.bp-primary){background:#0b1f5a!important;border:2px solid #46e0f0!important;color:#46e0f0!important;font-weight:800;box-shadow:none!important}
+/* 独立デモ・計画の帯も紺の窓に */
+body.gm-page .mode-band{background:#0b1f5a!important;color:#b9c6e8!important;border:2px solid #8fa6cc!important;border-radius:6px}
+body.gm-page .mode-band b,body.gm-page .mode-band strong{color:#fff!important}
+body.gm-page .mode-band button{background:none!important;border:1px solid #46e0f0!important;color:#46e0f0!important}
