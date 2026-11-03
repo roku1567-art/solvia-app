@@ -517,3 +517,18 @@ body .bp-attn.k-unknown{background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22h
 body .bp-attn.k-unknown::after{content:none!important}
 svg.pix{width:1.1em;height:1.1em;vertical-align:-.15em;image-rendering:pixelated;flex:none}
 .bp-wins{touch-action:pan-y;overscroll-behavior:contain}
+/* 盤の絞り込み（全部・今日・要対応・新）。合わない扉は薄く（位置は動かさない） */
+.bp-filter{flex:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.bp-filter button{display:flex;align-items:center;justify-content:center;gap:4px;min-height:30px;border:1px solid #8fa6cc;border-radius:15px;background:#0b1f5a;color:#dfe9f3;font-size:.72rem;font-weight:700}
+.bp-filter button b{font-size:.8rem;color:#fff}
+.bp-filter button[aria-pressed=true]{border-color:#46e0f0;background:#0e3550;color:#46e0f0}.bp-filter button[aria-pressed=true] b{color:#46e0f0}
+.bp-filter .f-attn[aria-pressed=true]{border-color:#ffd23c;color:#ffd23c}.bp-filter .f-attn[aria-pressed=true] b{color:#ffd23c}
+.board-screen .bp-door.is-dim{opacity:.22;filter:grayscale(.8)}
+.board-screen .bp-door.is-dim.is-selected{opacity:.6}
+.board-screen .bp-filter button{min-height:24px!important;height:24px;padding:0 4px!important;font-size:.66rem!important}.board-screen .bp-filter button b{font-size:.74rem!important}
+/* 見かた：設備の箱の枠の色 */
+.lg-frames{display:grid;gap:5px}
+.lg-frame{display:grid;grid-template-columns:30px 2.6em 1fr;align-items:center;gap:6px}
+.lg-frame i{width:28px;height:18px;border:2px solid var(--lamp,#8fa6cc);border-radius:4px;background:#061238;box-shadow:0 0 6px var(--lamp-glow,transparent)}
+.lg-frame b{font-size:.8rem}.lg-frame small{font-size:.64rem;color:#b9c6e8}
+.lg-frame.lamp-normal{--lamp:#5fe39a;--lamp-glow:#5fe39a88}.lg-frame.lamp-known{--lamp:#46e0f0}.lg-frame.lamp-caution{--lamp:#ffd23c}.lg-frame.lamp-alarm{--lamp:#ff5a4a}.lg-frame.lamp-unknown{--lamp:#8fa6cc}
