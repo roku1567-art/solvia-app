@@ -1,13 +1,13 @@
 /* 横向き・広い画面（iPhone の横・テレビに映すとき・ノートパソコン）。縦の画面は変えない（2026-11-03）
    下のボタンの帯は左に縦に並べ、各画面は横に2列にする */
-@media (orientation:landscape) and (min-width:700px){
+@media (orientation:landscape) and (min-width:560px){
  body{grid-template-columns:auto minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr)!important}
  .rail{grid-row:1!important;grid-column:1!important;width:78px!important;max-width:none!important;height:100%!important;justify-self:stretch!important;border-top:0!important;border-right:1px solid #31566b!important;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom) env(safe-area-inset-left)!important;box-sizing:content-box;overflow:hidden}
  .rail nav{grid-template-columns:1fr!important;grid-auto-rows:minmax(0,1fr);height:100%}
  .rail nav button{min-height:0!important;height:100%!important;border-right:0!important;border-bottom:1px solid #31566b!important;font-size:.72rem!important}
  main{grid-row:1!important;grid-column:2!important;max-width:none!important}
 }
-@media (orientation:landscape) and (min-width:700px){
+@media (orientation:landscape) and (min-width:560px){
  .rail nav button{flex-direction:column!important;gap:2px!important;padding:2px!important}
  .rail nav button>*{max-width:100%}
  /* 本部：上に題名、左に絵、右に帯・予定・数字の札 */
@@ -19,7 +19,7 @@
  .hq-live>.hq-strip{grid-row:2;align-self:start}
  .hq-live>.hq-summary{grid-row:2;align-self:start;margin-top:56px!important;overflow:auto;max-height:calc(100% - 56px)}
 }
-@media (orientation:landscape) and (min-width:700px){
+@media (orientation:landscape) and (min-width:560px){
  .hq-live>.miniature{height:auto!important;width:min(58vw,calc((100dvh - 72px) * var(--hq-art-w,1) / var(--hq-art-h,1)))!important}
 }
 @media (orientation:landscape) and (min-width:1100px){
@@ -27,7 +27,7 @@
  .hq-live>.hq-strip,.hq-live>.hq-summary{zoom:1.3}
  .hq-live>.hq-summary{margin-top:52px!important}
 }
-@media (orientation:landscape) and (min-width:700px){
+@media (orientation:landscape) and (min-width:560px){
  /* 地図の全体：左に絵（縦長の絵が全部見える大きさ）、右に地域の一覧。絵の上の県の札は一覧と重なるので隠す */
  .map-final.landmark-overview{max-width:none!important;width:100%!important;height:100%!important;display:grid!important;grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto auto;column-gap:10px}
  .map-final.landmark-overview>.map-heading{grid-column:1/-1;grid-row:1}
@@ -43,7 +43,7 @@
  body[data-page=map] .map-detail>.map-hint{float:right;clear:right}
  .map-detail>.real-map-wrap #corporate-real-map{height:calc(100dvh - 40px)!important;min-height:0!important}
 }
-@media (orientation:landscape) and (min-width:700px){
+@media (orientation:landscape) and (min-width:560px){
  /* 点検の盤：左に盤・絞り込み・選ぶ欄、右に選択中の窓（窓は右の高さいっぱいで、窓の中だけ動かす） */
  .board-screen{display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);grid-template-rows:auto auto auto minmax(0,1fr) auto auto auto;column-gap:12px;max-width:none!important}
  .board-screen>*{grid-column:1}
@@ -53,11 +53,11 @@
  .board-screen>.bp-wins{grid-column:2;grid-row:1/-1;height:100%;min-height:0;overflow:auto;padding-top:4px}
  .board-screen.is-folded>.bp-cabinet{height:auto!important}
 }
-@media (orientation:landscape) and (min-width:700px){
+@media (orientation:landscape) and (min-width:560px){
  .inspection-board-page{max-width:none!important}
  .bp-wins>.bp-bubble{position:static!important;inset:auto!important;height:auto!important;max-height:none!important;width:auto!important;margin-top:8px;flex:none}
 }
-@media (orientation:landscape) and (min-width:700px){
+@media (orientation:landscape) and (min-width:560px){
  .bp-wins>.bp-bubble{padding:8px 10px!important;border:3px solid #fff!important;border-radius:6px;background:#0b1f5a!important;box-shadow:0 0 0 2px #000!important;color:#fff;overflow:visible}
  .bp-wins>.bp-bubble .bb-table{table-layout:fixed;width:100%;border-collapse:collapse;border:0!important}
  .bp-wins>.bp-bubble .bb-table thead{display:none!important}
@@ -68,4 +68,13 @@
 @media (orientation:landscape) and (min-width:1100px){
  .rail nav{grid-auto-rows:minmax(0,96px)!important;align-content:start}
  .rail nav button{font-size:.8rem!important}.rail nav .nav-pixel,.rail nav button svg,.rail nav button img{width:30px!important;height:30px!important}
+}
+/* 狭い横向き（iPhone SE・8 など 667×375）：左の帯を細く、2列の比率を半々に */
+@media (orientation:landscape) and (min-width:560px) and (max-width:760px){
+ .rail{width:58px!important}.rail nav button{font-size:.62rem!important}
+ .hq-live>.miniature{width:min(50vw,calc((100dvh - 64px) * var(--hq-art-w,1) / var(--hq-art-h,1)))!important}
+ .hq-live>.hq-strip,.hq-live>.hq-summary{font-size:.86em}
+ .hq-live .summary-counts{grid-template-columns:1fr 1fr!important}
+ .board-screen{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;column-gap:8px!important}
+ .board-screen .bp-head h2{font-size:.9rem!important}
 }
