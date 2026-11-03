@@ -203,3 +203,17 @@ body .hq-live>.solvia-title>.weather-chip{font-size:.62rem!important;gap:2px!imp
 body .hq-live>.solvia-title>.weather-chip>span:first-child{display:none!important}
 body .hq-live>.solvia-title>.weather-chip b{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.15;text-align:center}
 body .hq-live>.solvia-title>.weather-chip{width:74px!important;max-width:74px!important;flex:none!important;padding:0!important}body .hq-live>.solvia-title>.weather-chip b{white-space:nowrap!important;font-size:.6rem!important}body .hq-live>.solvia-title>.weather-chip>*:not(b){display:none!important}
+/* 地図の地域の一覧（横向き・広い画面だけ。縦では出さない） */
+.ov-side{display:none}
+.ov-side .gh{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}.ov-side .gh small{font-size:.66rem;color:#b9c6e8}
+.ov-row{display:grid;grid-template-columns:minmax(0,1.3fr) auto minmax(0,.8fr) minmax(0,.8fr);gap:6px;align-items:stretch;padding:6px 0;border-bottom:1px dashed #33507e}.ov-row:last-child{border:0}
+.ov-row>button{min-height:48px;border:2px solid #4d6a88;border-radius:6px;background:#061238;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:2px 6px}
+.ov-row .ov-name{align-items:flex-start;border-color:#fff}.ov-row .ov-name b{font-size:1.05rem}.ov-row small{font-size:.62rem;color:#b9c6e8}
+.ov-row .ov-attn{flex-direction:row;gap:4px;min-width:64px}.ov-row .ov-attn svg{width:18px;height:18px}.ov-row .ov-attn b{font-size:1.05rem}
+.ov-row .ov-attn.is-on{background:#ffd23c;border-color:#1b1206;color:#1b1206}.ov-row .ov-attn.is-on *{color:#1b1206}
+.ov-row .ov-attn.is-urgent{background:#d63a2e;border-color:#fff}
+.ov-row .ov-today b,.ov-row .ov-month b{font-size:.9rem}.ov-row .ov-today.ov-day-pending b{color:#5cd2ff}.ov-row .ov-today.ov-day-complete b{color:#5fe39a}
+.ov-side.gm{max-width:none!important;margin:0!important}
+.ov-row .ov-attn .new-pill{color:#ffd23c!important;background:#1b1206!important}
+.ov-row .ov-attn.is-urgent .new-pill{color:#c8352a!important;background:#fff!important}
+@media (min-width:1100px){.ov-row>button{min-height:64px}.ov-row .ov-name b{font-size:1.3rem}.ov-row .ov-today b,.ov-row .ov-month b{font-size:1.1rem}}
