@@ -189,8 +189,10 @@ export function lastLook(d,s){const t=x=>Date.parse(x?.at||'')||0,v=(d.visits||[
 // ふきだしの「過去」：解決済みの不具合・復帰した警報・終わった緊急対応・完了した点検を、新しい順に並べる（羅列）。
 export function sitePast(d,s,limit=40){
   const out=[],t=v=>sinceOf(v),add=(at,kind,title,detail='')=>out.push({at:t(at)===null?null:new Date(t(at)).toISOString(),kind,title:title||'内容未記入',detail});
-  for(const i of (s.field?.issues||[]).filter(i=>i.status==='完了'))add(i.updatedAt||i.createdAt,'不具合 解決',i.title,i.createdAt?'登録 '+String(i.createdAt).slice(0,10):'');
-  for(const a of (s.monitoring?.alarms||[]).filter(a=>a.recoveredAt))add(a.recoveredAt,'警報 復帰',a.text||'警報',[a.code,a.occurredAt?'発生 '+String(a.occurredAt).slice(0,10):''].filter(Boolean).join(' · '));
+  // 解決したときの確かめた方法（現地・遠隔・外部）も残す
+  const how=k=>{const w=s.review?.actions?.[k]?.way;return ['現地','遠隔','外部'].includes(w)?w+'で確認':'';};
+  for(const i of (s.field?.issues||[]).filter(i=>i.status==='完了'))add(i.updatedAt||i.createdAt,'不具合 解決',i.title,[how('issue:'+i.id),i.createdAt?'登録 '+String(i.createdAt).slice(0,10):''].filter(Boolean).join(' · '));
+  for(const a of (s.monitoring?.alarms||[]).filter(a=>a.recoveredAt))add(a.recoveredAt,'警報 復帰',a.text||'警報',[how('alarm:'+a.id),a.code,a.occurredAt?'発生 '+String(a.occurredAt).slice(0,10):''].filter(Boolean).join(' · '));
   for(const i of (d.incidents||[]).filter(i=>i.siteId===s.id&&i.restoredAt&&i.permanent?.trim()))add(i.restoredAt,'緊急対応 完了',i.event||i.name,i.permanent);
   for(const v of (d.visits||[]).filter(v=>v.siteId===s.id&&v.status==='complete'))add(v.at,'点検 完了',v.note||'所見の記録なし');
   return out.sort((a,b)=>(b.at||'').localeCompare(a.at||'')).slice(0,limit);
