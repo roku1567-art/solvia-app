@@ -83,3 +83,10 @@ body[data-page=home] #jst-clock{position:static;min-height:27px;padding:0;border
  .map-final .landmark-canvas .region-1{top:calc(var(--map-top-overflow,0px) + 92px)!important}
  .map-final .landmark-canvas .region-2{top:calc(var(--map-top-overflow,0px) + 178px)!important}
 }
+/* 品質管理の札（本部の建物の入口の上の掲示板）。要確認の数は黄色 */
+.hq-live .hq-qms{position:absolute;z-index:3;left:2%;top:22%;padding:0;border:0;background:none!important;min-height:44px;display:flex;align-items:center}
+.hq-live .hq-qms .scene-tag{position:static}
+.hq-live .hq-qms.has-n .scene-tag b{display:inline-block;min-width:1.4em;padding:0 4px;border-radius:9px;background:#ffd23c;color:#1b1206;text-align:center}
+/* 一人作業：開始から決めた時間たっても終了が押されていない点検（あるときだけ） */
+.hq-live .hq-solo{position:absolute;z-index:3;left:2%;top:14%;padding:0;border:0;background:none!important;min-height:44px;display:flex;align-items:center}
+.hq-live .hq-solo .scene-tag{position:static;border-color:#ffd23c!important}.hq-live .hq-solo .scene-tag b{display:inline-block;min-width:1.4em;padding:0 4px;border-radius:9px;background:#ffd23c;color:#1b1206;text-align:center}

@@ -50,14 +50,16 @@ export function plateOf(siteId,equipmentId){if(!equipmentId)return null;if(equip
 export const activeAlarms=s=>(Array.isArray(s?.monitoring?.alarms)?s.monitoring.alarms:[]).filter(a=>a&&!a.recoveredAt);
 
 // 通信状態。正常は「受信を確認でき、本人が設定した判定時間内」の場合だけ。未設定・未受信・条件未設定は不明。
-export function commState(s,now=Date.now()){
+// rule：本人指定の黄・赤の時間（通信の管理の設定。初期値 3時間・24時間）。拠点ごとの「何分以内を正常」が入っていればそちらを優先
+export const ruleOf=d=>({yellowHours:3,redHours:24,...(d?.comm?.settings||{})});
+export function commState(s,now=Date.now(),rule=null){
   const c=s?.monitoring?.comm,alarms=activeAlarms(s).filter(a=>a.target==='comm');
   if(!c||!c.mode)return {state:'unknown',mark:'unknown',label:'未設定',lastReceivedAt:null};
   if(c.mode==='なし')return {state:'none',mark:null,label:'通信なし',lastReceivedAt:null};
   const last=c.lastReceivedAt||null,base={lastReceivedAt:last};
   if(alarms.length){const worst=alarms.map(a=>sevMark[a.severity]||'unknown').sort((a,b)=>MARK_ORDER[a]-MARK_ORDER[b])[0];return {...base,state:worst,mark:worst,label:worst==='alarm'?'通信異常':worst==='caution'?'通信注意':'警報内容不明'};}
   if(time(last)===null)return {...base,state:'unknown',mark:'unknown',label:'未受信'};
-  if(!(Number.isFinite(c.staleMinutes)&&c.staleMinutes>0))return {...base,state:'unknown',mark:'unknown',label:'判定条件未設定'};
+  if(!(Number.isFinite(c.staleMinutes)&&c.staleMinutes>0)){if(!(rule&&rule.yellowHours>0&&rule.redHours>0))return {...base,state:'unknown',mark:'unknown',label:'判定条件未設定'};const age=now-time(last);if(age>rule.redHours*3600000)return {...base,state:'alarm',mark:'alarm',label:'途絶（'+rule.redHours+'時間以上）'};if(age>rule.yellowHours*3600000)return {...base,state:'caution',mark:'caution',label:'未更新'};return {...base,state:'normal',mark:null,label:'正常'};}
   if(now-time(last)>c.staleMinutes*60000)return {...base,state:'caution',mark:'caution',label:'未更新'};
   return {...base,state:'normal',mark:null,label:'正常'};
 }
@@ -76,7 +78,7 @@ export function siteMarks(d,s,now=Date.now()){
   const groups=new Map(),add=(target,mark,source)=>{const key=target||'';if(!groups.has(key))groups.set(key,{target,marks:new Map()});const g=groups.get(key);if(!g.marks.has(mark))g.marks.set(mark,[]);g.marks.get(mark).push(source);};
   for(const i of unresolvedItems(d).rows.filter(i=>i.siteId===s.id))add(i.type==='issue'?plateOf(s.id,i.equipmentId):null,'caution',{type:i.type,id:i.id,title:i.title||''});
   for(const a of activeAlarms(s)){if(a.target==='comm')continue;add(plateOf(s.id,a.target),sevMark[a.severity]||'unknown',{type:'alarm',id:a.id,code:a.code||'',title:a.text||''});}
-  const c=commState(s,now);if(c.mark)add('comm',c.mark,{type:'comm',label:c.label});
+  const c=commState(s,now,ruleOf(d));if(c.mark)add('comm',c.mark,{type:'comm',label:c.label});
   const list=[...groups.values()].map(g=>({target:g.target,marks:[...g.marks].map(([kind,sources])=>({kind,count:sources.length,sources})).sort((a,b)=>MARK_ORDER[a.kind]-MARK_ORDER[b.kind])}));
   list.sort((a,b)=>MARK_ORDER[a.marks[0].kind]-MARK_ORDER[b.marks[0].kind]||(a.target?0:1)-(b.target?0:1));
   return {groups:list,star:!!s.watch?.on,starNote:s.watch?.note||''};
@@ -92,7 +94,7 @@ export function boardView(d,{period='today',pageIndex=0,today=day(),now=Date.now
 }
 export function boardSummary(d,{today=day(),now=Date.now()}={}){
   const sites=boardSites(d),issues=unresolvedItems(d),rowIds=new Set(issues.rows.map(r=>r.id)),alarms=sites.flatMap(s=>activeAlarms(s).map(a=>({...a,siteId:s.id,linked:!!a.issueId&&rowIds.has(a.issueId)})));
-  const comm={normal:0,unknown:0,caution:0,alarm:0,none:0};for(const s of sites)comm[commState(s,now).state]++;
+  const comm={normal:0,unknown:0,caution:0,alarm:0,none:0};for(const s of sites)comm[commState(s,now,ruleOf(d)).state]++;
   return {sites:sites.length,unnumbered:(d?.sites||[]).length-sites.length,today:inspectionPeriod(d,{period:'today',today}),month:inspectionPeriod(d,{period:'month',today}),
     urgent:urgentCount(d,'',now),issues:{known:issues.known,...(()=>{const idx=attentionIndex(d,'',now),all=[...issues.rows,...attentionExtras(d,now)];return {count:all.filter(r=>idx.get(rowKey(r))?.kind!=='watch').length,watch:all.filter(r=>idx.get(rowKey(r))?.kind==='watch').length,newCount:[...idx.values()].filter(v=>v.isNew).length};})(),issue:issues.rows.filter(r=>r.type==='issue').length,incident:issues.rows.filter(r=>r.type==='incident').length,rows:issues.rows},
     alarms:{active:alarms.length,linked:alarms.filter(a=>a.linked).length,unlinked:alarms.filter(a=>!a.linked).length,rows:alarms},comm,
@@ -112,7 +114,7 @@ export function siteBrief(d,s,{today=day(),now=Date.now()}={}){
   return {id:s.id,no:s.boardNo,label:boardLabel(s.boardNo),name:s.name||'',sample:!!s.sample,
     lastDone:doneDays.at(-1)||null,next:next?{id:next.id,source:next.source,date:next.date,time:next.time||'',title:next.title||'点検',today:next.date===today,overdue:next.date<today,state:'pending'}:null,sameDay:sameDay.map(e=>({id:e.id,source:e.source,title:e.title||'点検',time:e.time||''})),undated,
     issues:unresolvedItems(d).rows.filter(i=>i.siteId===s.id).length,
-    battery:unit('battery','蓄電池',['bms','soc'],legacySoc),pcs:unit('pcs','PCS',['run','power']),comm:commState(s,now),watch:s.watch||null};
+    battery:unit('battery','蓄電池',['bms','soc'],legacySoc),pcs:unit('pcs','PCS',['run','power']),comm:commState(s,now,ruleOf(d)),watch:s.watch||null};
 }
 
 // ---- 確認すること（扉の丸とふきだし） ----
@@ -134,7 +136,7 @@ export function siteAttention(d,s,now=Date.now()){
   const push=(key,target,kind,title,since,extra={})=>{const t=sinceOf(since);items.push({key,target,kind,title:title||'内容未記入',since:t===null?null:new Date(t).toISOString(),days:t===null?null:Math.floor((now-t)/DAY)+1,spanned:t===null?null:visits.filter(v=>v>t).length,isNew:!seen.has(key),...extra});};
   for(const i of unresolvedItems(d).rows.filter(i=>i.siteId===s.id))push((i.type==='incident'?'incident:':'issue:')+i.id,i.type==='issue'?plateOf(s.id,i.equipmentId):null,'caution',i.title||i.event,i.createdAt||i.occurredAt,{source:i.type});
   for(const a of activeAlarms(s)){const target=a.target==='comm'?'comm':plateOf(s.id,a.target);push('alarm:'+a.id,target,sevMark[a.severity]||'unknown',a.text||'警報',a.occurredAt,{source:'alarm',code:a.code||'',text:a.text||'',severityText:a.severityText||''});}
-  const c=commState(s,now);
+  const c=commState(s,now,ruleOf(d));
   if(s.monitoring?.comm?.mode==='接続'&&c.mark&&!activeAlarms(s).some(a=>a.target==='comm')){const last=sinceOf(c.lastReceivedAt),stale=s.monitoring.comm.staleMinutes;push('comm:'+c.label,'comm',c.mark,c.label==='未更新'?'受信が止まっている':c.label==='未受信'?'受信を確認できない':c.label,c.label==='未更新'&&last!==null&&stale?new Date(last+stale*60000).toISOString():null,{source:'comm'});}
   // 内容の種類（アイコン用）と、確認のときに選んだ対処（現地・遠隔・外部・未定）と詳細
   const acts=s.review?.actions||{};for(const i of items){const issue=i.source==='issue'?(s.field?.issues||[]).find(x=>'issue:'+x.id===i.key):null;i.category=issue?(CATEGORIES.includes(issue.category)?issue.category:'その他'):i.source==='incident'?'緊急':i.target==='comm'?'受信':i.source==='alarm'?'警報':'その他';i.action=acts[i.key]||null;i.recur=recurCount(s,i);}

@@ -217,3 +217,11 @@ body .hq-live>.solvia-title>.weather-chip{width:74px!important;max-width:74px!im
 .ov-row .ov-attn .new-pill{color:#ffd23c!important;background:#1b1206!important}
 .ov-row .ov-attn.is-urgent .new-pill{color:#c8352a!important;background:#fff!important}
 @media (min-width:1100px){.ov-row>button{min-height:64px}.ov-row .ov-name b{font-size:1.3rem}.ov-row .ov-today b,.ov-row .ov-month b{font-size:1.1rem}}
+/* 地図の右の「本日の点検」（横向き・広い画面だけ） */
+.ov-today-list{margin-top:8px}
+.ov-trow{display:grid;grid-template-columns:3.4em 3em minmax(0,1fr) auto;align-items:center;gap:8px;width:100%;min-height:42px;padding:4px 6px;border:0;border-bottom:1px dashed #33507e;background:none;color:#fff;text-align:left}
+.ov-trow:last-child{border-bottom:0}
+.ov-tm{font-size:.78rem;color:#b9c6e8}.ov-tok{display:grid;place-items:center;height:26px;border:2px solid #fff;border-radius:4px;font:800 .72rem ui-monospace,monospace;background:#061238}
+.ov-trow b{font-size:.86rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ov-trow em{font-style:normal;font-size:.66rem;padding:1px 8px;border-radius:9px;border:1px solid #5cd2ff;color:#5cd2ff}
+.ov-trow.is-done em{border-color:#5fe39a;color:#5fe39a}

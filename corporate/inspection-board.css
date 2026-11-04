@@ -532,3 +532,4 @@ svg.pix{width:1.1em;height:1.1em;vertical-align:-.15em;image-rendering:pixelated
 .lg-frame i{width:28px;height:18px;border:2px solid var(--lamp,#8fa6cc);border-radius:4px;background:#061238;box-shadow:0 0 6px var(--lamp-glow,transparent)}
 .lg-frame b{font-size:.8rem}.lg-frame small{font-size:.64rem;color:#b9c6e8}
 .lg-frame.lamp-normal{--lamp:#5fe39a;--lamp-glow:#5fe39a88}.lg-frame.lamp-known{--lamp:#46e0f0}.lg-frame.lamp-caution{--lamp:#ffd23c}.lg-frame.lamp-alarm{--lamp:#ff5a4a}.lg-frame.lamp-unknown{--lamp:#8fa6cc}
+.bp-cycle{margin:2px 0 0;font-size:.62rem;color:#b9c6e8;line-height:1.3}.bp-cycle .is-late{color:#ffd23c;font-weight:700}

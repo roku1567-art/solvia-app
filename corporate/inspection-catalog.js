@@ -33,18 +33,37 @@ export const DEFAULT_ITEMS=[
   {name:'非常停止・遮断手段',equip:'battery',tier:'最重要'},
   {name:'監視カメラ・入退室',equip:'battery',tier:'重要'},
   {name:'当日警報・不具合・指摘事項',equip:'battery',tier:'重要'},
+  // 低圧ならでは（2026-11-04 指示書）
+  {name:'箱の中の温度',equip:'battery',tier:'重要',lv:true},
+  {name:'防犯・敷地',equip:'battery',tier:'重要',lv:true,children:['柵・門・鍵','標識（看板）','防犯カメラ（ある場合）','ケーブルの盗難・切断の跡','不法投棄・いたずら']},
+  // 年次だけの項目（cycle:'年次'。月次・臨時の点検では出さない）
+  {name:'メーカー指定項目（セル電圧など）',equip:'battery',tier:'重要',cycle:'年次'},
   // PCS
   {name:'PCS運転・警報',equip:'pcs',tier:'最重要'},
   {name:'充放電電流・DC電圧',equip:'pcs',tier:'最重要'},
   {name:'有効・無効電力',equip:'pcs',tier:'重要'},
+  {name:'絶縁抵抗の測定',equip:'pcs',tier:'最重要',cycle:'年次'},
+  {name:'接地抵抗の測定',equip:'pcs',tier:'最重要',cycle:'年次'},
+  {name:'作業中の札・鍵（ブレーカーを切ったとき）',equip:'pcs',tier:'最重要',cycle:'年次'},
+  {name:'パワコンの保護機能',equip:'pcs',tier:'最重要',cycle:'年次',children:['設定値が決めた値のまま','ブレーカーを切ると止まる','戻すと決めた時間で自動で再開する']},
+  {name:'漏電ブレーカーが切れるか',equip:'pcs',tier:'重要',cycle:'年次'},
+  {name:'接続部のゆるみ・過熱',equip:'pcs',tier:'重要',cycle:'年次',children:['締め直し','熱画像']},
   // 通信
   {name:'BMS・PCS通信',equip:'comm',tier:'最重要'},
   {name:'遠隔監視・アグリゲーター連携',equip:'comm',tier:'最重要'},
   {name:'EMS運転状態',equip:'comm',tier:'重要'},
+  {name:'通信機が動いているか（ランプ）',equip:'comm',tier:'最重要',lv:true},
+  {name:'最後にデータが届いた時刻',equip:'comm',tier:'最重要',lv:true},
+  {name:'電波の強さ',equip:'comm',tier:'重要',lv:true},
+  {name:'アンテナの状態',equip:'comm',tier:'重要',lv:true,children:['外れ','向き','ケーブル']},
+  {name:'盤内の温度',equip:'comm',tier:'重要',lv:true},
+  {name:'配線・電源の状態',equip:'comm',tier:'重要',lv:true},
   // パネル類（中の項目の「配線・接続」は以前の太陽光の記録と同じ鍵）
-  {name:'外観',equip:'pv',tier:'最重要',children:['架台・固定','配線・接続','影・雑草','発電量の異常','パネルの割れ・汚れ']},
+  {name:'外観',equip:'pv',tier:'最重要',children:['架台・固定','配線・接続','影・雑草','発電量の異常','パネルの割れ・汚れ','小動物の被害（かじり跡・巣）']},
   // 分電盤
-  {name:'外観',equip:'board',tier:'最重要',children:['焦げ・変色・水濡れ','ブレーカーの状態','端子の緩み・発熱跡','表示灯・警報','異音・異臭']},
+  {name:'外観',equip:'board',tier:'最重要',children:['焦げ・変色・水濡れ','ブレーカーの状態','端子の緩み・発熱跡','表示灯・警報','異音・異臭','過熱']},
+  {name:'引込線',equip:'board',tier:'重要',children:['たるみ','樹木との接触']},
+  {name:'メーター',equip:'board',tier:'重要',children:['売電メーター','買電メーター','蓄電池の個別メーター（ある場合）']},
   // その他（基本形にない設備を足したときの入れ物）
   {name:'外観・動作',equip:'other',tier:'最重要'},
   // 高圧向け（標準では隠す）
@@ -68,16 +87,23 @@ export function siteEquipment(d,s){const base=equipmentFor(s),has=k=>base.some(e
 
 // 点検の項目（葉）。key は記録の鍵。Excel の BESS 項目がある場合は以前と同じ「siteId:battery:BESSのID」を使う（過去の記録と前回の表示がつながる）。
 // 設備がその拠点に無い項目（例：PCS 未登録の拠点の PCS 項目）は、蓄電池の表に入れて消さない。
-export function inspectionItems(d,s){
-  const eq=siteEquipment(d,s),byKey=Object.fromEntries(eq.map(e=>[e.key,e])),battery=byKey.battery,bess=Array.isArray(d?.bess)?d.bess:[],items=catalogItems(d),all=DEFAULT_ITEMS,out=[];
+// 点検の種類：月次（初期）・年次（月次の項目＋年次だけの項目）・臨時（月次の項目を基本に所見中心）
+export const INSPECTION_TYPES=['月次','年次','臨時'];
+export const typeOf=v=>INSPECTION_TYPES.includes(v?.inspectionType)?v.inspectionType:'月次';
+const inCycle=(it,type)=>it.cycle!=='年次'||type==='年次';
+export function inspectionItems(d,s,type='月次'){
+  const eq=siteEquipment(d,s),byKey=Object.fromEntries(eq.map(e=>[e.key,e])),battery=byKey.battery,bess=Array.isArray(d?.bess)?d.bess:[],items=catalogItems(d).filter(it=>inCycle(it,type)),all=DEFAULT_ITEMS,out=[];
   const BESS_EQUIP=['battery','pcs','comm','hv'],place=equip=>byKey[equip]||(equip!=='hv'?battery:null);
-  const leaf=(home,it,label,child,key,procedure='')=>({key,label,parent:it.id,parentLabel:it.name,child,procedure,equipmentId:home.id,equipKey:home.key,kind:home.kind,tier:it.tier});
+  const leaf=(home,it,label,child,key,procedure='')=>({key,label,parent:it.id,parentLabel:it.name,child,procedure,equipmentId:home.id,equipKey:home.key,kind:home.kind,tier:it.tier,cycle:it.cycle||'月次'});
+  const each=(home,it)=>{for(const child of it.children||[null])out.push(leaf(home,it,child||it.name,!!child,home.id+':'+(child||it.name)));};
   if(bess.length&&battery){
     // Excel の BESS 点検表がある：蓄電池・PCS・通信・高圧の項目はその表から作る。鍵は以前と同じ「siteId:battery:BESSのID」。名前で一覧と照らして設備と最重要／重要を決め、一覧に無い名前は蓄電池の重要に入れる。
     for(const r of bess){const known=all.find(it=>it.name===r.name&&BESS_EQUIP.includes(it.equip)),it=known?items.find(x=>x.id===known.equip+':'+known.name):{id:'battery:'+r.name,name:r.name,equip:'battery',tier:'重要'};if(!it)continue;const home=place(it.equip);if(!home)continue;out.push(leaf(home,it,r.name,false,battery.id+':'+r.id,r.procedure||''));}
-  }else for(const it of items.filter(it=>BESS_EQUIP.includes(it.equip))){const home=place(it.equip);if(home)out.push(leaf(home,it,it.name,false,home.id+':'+it.name));}
+    // 表に無い新しい項目（低圧ならでは・年次だけ・中の項目がある親）は一覧から足す
+    for(const it of items.filter(it=>BESS_EQUIP.includes(it.equip)&&(it.lv||it.cycle||it.children)&&!bess.some(r=>r.name===it.name))){const home=it.lv?byKey[it.equip]:place(it.equip);if(home)each(home,it);}
+  }else for(const it of items.filter(it=>BESS_EQUIP.includes(it.equip))){const home=it.lv?byKey[it.equip]:place(it.equip);if(home)each(home,it);}  // 低圧ならではの項目は、その設備がある拠点だけ
   // パネル類・分電盤・その他は一覧から（中の項目がある親は中の項目ごと）
-  for(const it of items.filter(it=>!BESS_EQUIP.includes(it.equip))){const home=byKey[it.equip];if(!home)continue;for(const child of it.children||[null])out.push(leaf(home,it,child||it.name,!!child,home.id+':'+(child||it.name)));}
+  for(const it of items.filter(it=>!BESS_EQUIP.includes(it.equip))){const home=byKey[it.equip];if(home)each(home,it);}
   return out;}
 
 // 親ごとの集まり（表の1行）。印：中がすべて正常（対象外を除く）で ○、1つでも不具合ありで ⚠、未確認が残れば 未確認、すべて対象外なら 対象外。

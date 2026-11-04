@@ -118,3 +118,13 @@ body[data-page=visit] #page{padding:0!important;background:radial-gradient(120% 
 .r-table .st-chip em{font-size:.6rem}
 .r-how{display:block;font-size:.66rem;color:#5fe39a}
 .visit2 .r-todo,.r-todo{color:#46e0f0!important}
+/* 点検の種類（月次・年次・臨時）と、一人作業の開始・終了 */
+.v-typebar{display:flex;align-items:center;gap:6px;padding:2px 6px}
+.v-type{display:flex;gap:3px}.v-type button{min-height:30px;min-width:44px;padding:0 8px;border:2px solid #fff;border-radius:4px;background:#0b1f5a;color:#fff;font:inherit;font-size:.74rem}
+.v-type button[aria-pressed=true]{background:#46e0f0;color:#061238;font-weight:700}
+.v-clock{margin-left:auto;display:flex;gap:4px;align-items:center;font-size:.7rem;color:#dfe9f3}.v-clock button{min-height:30px;padding:0 10px;border:2px solid #46e0f0;border-radius:4px;background:#061238;color:#46e0f0;font:inherit;font-size:.74rem}
+.v-clock span{padding:2px 6px;border:1px solid #4d6a88;border-radius:4px}
+.v-pass{color:#3ee08f}.v-fail{color:#ff8a7a}
+.v-boxtemp{display:flex;flex-direction:column;gap:2px;margin-top:6px}
+.v-foot .v-typebar{padding:2px 0 4px}
+@media(max-height:640px){.v-foot .v-warn{display:none}.v-foot .v-typebar{padding:0 0 2px}.v-type button,.v-clock button{min-height:28px}}
